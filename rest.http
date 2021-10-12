@@ -1,0 +1,50 @@
+POST http://localhost:8080/users
+content-type: application/json
+
+{
+    "email":"user@gmail.com",
+    "password":"password"
+}
+
+###
+
+POST http://localhost:8080/users
+content-type: application/json
+
+{
+    "email":"invalid",
+    "password":"password"
+}
+
+###
+
+POST http://localhost:8080/users
+content-type: application/json
+
+{
+    "email":"user@gmail.com"
+}
+
+###
+
+POST http://localhost:8080/sessions
+content-type: application/json
+
+{
+    "email":"user@gmail.com",
+    "password":"123"
+}
+
+###
+
+POST http://localhost:8080/sessions
+content-type: application/json
+
+{
+    "email":"user@gmail.com",
+    "password":"password"
+}
+
+###
+
+GET http://localhost:8080/private/whoami
