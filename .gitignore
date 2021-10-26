@@ -1,0 +1,3 @@
+jwt.exe
+/node_modules/*
+/react-auth/node_modules/*
