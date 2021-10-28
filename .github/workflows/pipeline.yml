@@ -13,6 +13,7 @@ jobs:
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }} 
+          name: github-actions
           known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
       - name: Adding Known Hosts
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
@@ -21,5 +22,7 @@ jobs:
       - name: Run docker-compose
         run: docker-compose up -d --build  
 
+ZVm7DQ8nQw?
+45.8.228.5?
 
     
