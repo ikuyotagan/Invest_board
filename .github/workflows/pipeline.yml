@@ -22,7 +22,5 @@ jobs:
       - name: Run docker-compose
         run: docker-compose up -d --build  
 
-ZVm7DQ8nQw?
-45.8.228.5?
 
     
