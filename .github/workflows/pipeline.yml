@@ -13,8 +13,9 @@ jobs:
         run: login as:root
       - name: Password
         run: root@45.8.228.5's password:ZVm7DQ8nQw
-      - name: Pull 
+      - name: Change directory
         run: cd app
+      - name: Pull
         run: git pull origin withDockerAll
       - name: Docker
         run: docker-compose up -d --build  
