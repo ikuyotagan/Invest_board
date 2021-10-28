@@ -1,0 +1,7 @@
+.git
+Dockerfile
+.dockerignore
+docker-compose.yaml
+*.exe
+rest.http
+.gitignore
