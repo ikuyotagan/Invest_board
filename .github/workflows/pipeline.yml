@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Login
-        run: root
+      - name: Connecting
+        run: ssh root@45.8.228.5
       - name: Password
         run: ZVm7DQ8nQw
       - name: Change directory
