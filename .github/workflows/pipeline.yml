@@ -9,29 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Connecting
-        run: ssh root@45.8.228.5
-      - name: Password
-        run: ZVm7DQ8nQw
-      - name: Change directory
-        run: cd app
-      - name: Pull
-        run: git pull origin withDockerAll
-      - name: Docker
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }} 
+          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
+      - name: Adding Known Hosts
+        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Deploy with rsync
+        run: rsync -avz ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/app/
+      - name: Run docker-compose
         run: docker-compose up -d --build  
-
-
-      # - name: Install SSH Key
-      #   uses: shimataro/ssh-key-action@v2
-      #   with:
-      #     key: ${{ secrets.SSH_PRIVATE_KEY }} 
-      #     known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
-      # - name: Adding Known Hosts
-      #   run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-      # - name: Deploy with rsync
-      #   run: rsync -avz ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/app/
-      # - name: Run docker-compose
-      #   run: docker-compose up -d --build  
 
 
     
