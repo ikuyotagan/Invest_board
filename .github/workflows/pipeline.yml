@@ -18,7 +18,7 @@ jobs:
       - name: Adding Known Hosts
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: Debug
-        run: cat ~/.ssh/github-actions
+        run: ssh -i /home/runner/.ssh/github-actions -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
       - name: Deploy with rsync
         run: rsync -avz ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/app/
       - name: Run docker-compose
