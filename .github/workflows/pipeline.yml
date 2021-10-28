@@ -10,9 +10,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Login
-        run: login as:root
+        run: root
       - name: Password
-        run: root@45.8.228.5's password:ZVm7DQ8nQw
+        run: ZVm7DQ8nQw
       - name: Change directory
         run: cd app
       - name: Pull
