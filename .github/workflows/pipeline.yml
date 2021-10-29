@@ -8,12 +8,12 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-    - name: executing remote ssh commands using password
+    - name: executing remote ssh commands using ssh key
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SHH_PRIVATE_KEY }}
+        key: ${{ secrets.PROVERKA }}
         # password: ${{ secrets.SSH_PASSWORD }}
         script: |
           whoami
