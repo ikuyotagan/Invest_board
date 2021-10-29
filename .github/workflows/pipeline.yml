@@ -13,24 +13,11 @@ jobs:
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
-        password: ${{ secrets.SSH_PASSWORD }}
-        script: whoami
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        key: ${{ secrets.SHH_PRIVATE_KEY }}
+        # password: ${{ secrets.SSH_PASSWORD }}
+        script: |
+          whoami
+          ls
 
 
 
