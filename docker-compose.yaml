@@ -56,9 +56,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2500M
+          memory: 3500M
         reservations:
-          memory: 1500M
+          memory: 2500M
     container_name: frontend
     restart: on-failure
     build:
