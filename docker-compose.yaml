@@ -29,6 +29,7 @@ services:
       - "8080:8080"
     environment:
       - PORT=8080
+      - CUSTOM_DATABASE_URL=host=postgres port=5432 user=postgres password=admin dbname=restapi_dev sslmode=disable
     volumes:
       - backendData:/app
 

@@ -10,7 +10,11 @@ import (
 )
 
 func Start(config *Config) error {
-	db, err := newDB(config.DatabaseURL)
+	URL := config.DatabaseURL
+	if config.CustomDatabseURl != "" {
+		URL = config.CustomDatabseURl
+	}
+	db, err := newDB(URL)
 	if err != nil {
 		return err
 	}
