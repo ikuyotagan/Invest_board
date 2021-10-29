@@ -56,7 +56,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 3500M
+          memory: 5000M
         reservations:
           memory: 2500M
     container_name: frontend
