@@ -53,6 +53,9 @@ services:
       - postgres
   
   frontend:
+    resources:
+            limits:
+              cpus: 4.50G
     container_name: frontend
     restart: on-failure
     build:
