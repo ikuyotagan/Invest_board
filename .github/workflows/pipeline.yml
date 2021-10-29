@@ -17,9 +17,7 @@ jobs:
         script: |
           whoami
           cd app
-          git init
-          git remote add origin https://github.com/Artemchikus/ssh  
-          git pull branch withDockerAll
+          git pull origin withDockerAll
           docker-compose up -d --build       
 
 
