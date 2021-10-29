@@ -14,10 +14,14 @@ jobs:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.PROVERKA }}
-        # password: ${{ secrets.SSH_PASSWORD }}
         script: |
           whoami
-          ls
+          cd app
+          git init
+          git remote add origin https://github.com/Artemchikus/ssh  
+          git pull branch withDockerAll
+          docker-compose up -d --build       
+
 
 
 
