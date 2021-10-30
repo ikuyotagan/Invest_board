@@ -1,0 +1,77 @@
+basePath: /Invest_board
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+  description: This is a sample server celler server.
+  title: Invest board
+  version: 0.0.1
+definitions:
+  User:
+    properties:
+      Email:
+        type: string
+      Password:
+        type: string
+    # Both properties are required
+    required:
+      - Email
+      - Password
+paths:
+  /users:
+    post:
+      summary: Creates User
+      description: Creates User
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Reg
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        200:
+          description: OK
+  /sessions:
+    post:
+      summary: Login User
+      description: Creates Session
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Auth
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        200:
+          description: OK
+  /logout:
+    post:
+      summary: Logout User
+      description: Delete Session
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+  /whoami:
+    get:
+      summary: Get User
+      description: Get Session
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+swagger: "2.0"

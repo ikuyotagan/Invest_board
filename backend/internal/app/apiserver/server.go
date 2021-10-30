@@ -119,6 +119,16 @@ func (s *server) logRequest(next http.Handler) http.Handler {
 	})
 }
 
+// handleUsersCreate godoc
+// @Summary Create User
+// @Description Create User
+// @ID handleUsersCreate
+// @Accept  json
+// @Produce  json
+// @Success 200 Ok
+// @Failure 400,404 Not ok
+// @Router /users [post]
+
 func (s *server) handleUsersCreate() http.HandlerFunc {
 	type request struct {
 		Email    string `json:"email"`
@@ -150,6 +160,16 @@ func (s *server) handleUsersCreate() http.HandlerFunc {
 		s.respond(w, r, http.StatusCreated, u)
 	}
 }
+
+// handleSessionsCreate godoc
+// @Summary Create Session
+// @Description Create Session
+// @ID handleSessionsCreate
+// @Accept  json
+// @Produce  json
+// @Success 200 Ok
+// @Failure 400,404 Not ok
+// @Router /sessions [post]
 
 func (s *server) handleSessionsCreate() http.HandlerFunc {
 	type request struct {
@@ -194,7 +214,11 @@ func (s *server) error(w http.ResponseWriter, r *http.Request, code int, err err
 func (s *server) respond(w http.ResponseWriter, r *http.Request, code int, data interface{}) {
 	w.WriteHeader(code)
 	if data != nil {
-		json.NewEncoder(w).Encode(data)
+		err := json.NewEncoder(w).Encode(data)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
 	}
 }
 

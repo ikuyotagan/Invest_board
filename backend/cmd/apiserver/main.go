@@ -12,6 +12,14 @@ var (
 	configPath string
 )
 
+// @title Invest board
+// @version 0.0.1
+// @description This is a sample server celler server.
+// @contact.email support@swagger.io
+//
+// @host localhost:8080
+// @BasePath /Invest_board
+
 func init() {
 	flag.StringVar(&configPath, "config_path", "configs/apiserver.toml", "path to config file")
 }
