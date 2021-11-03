@@ -1,14 +1,15 @@
-FROM golang:1.17-alpine
+FROM golang:1.17-alpine3.13 as development
 
 WORKDIR /app
 
-COPY . ./
-
-RUN apk update && apk upgrade && apk add --no-cache git
+COPY go.mod go.sum ./
 
 RUN go mod download
 
-RUN go build -o /exe ./cmd/apiserver/main.go
+COPY . .
 
-ENTRYPOINT [ "/exe" ]
+RUN go install github.com/cespare/reflex@latest
 
+EXPOSE 8080
+
+CMD reflex -g '*.go' go run ./cmd/apiserver/main.go --start-service

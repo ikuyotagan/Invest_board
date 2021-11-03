@@ -1,7 +1,8 @@
 .git
 Dockerfile
+Dockerfile.prod
 .dockerignore
 docker-compose.yaml
-*.exe
+main.exe
 rest.http
 .gitignore

@@ -1,0 +1,77 @@
+version: "3.8"
+
+services:
+  
+  postgres:
+    container_name: postgres
+    image: postgres:14.0-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: restapi_dev
+      DATABASE_SSL: false
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+
+  backend:
+    container_name: backend
+    links:
+      - postgres
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - 8080:8080
+    environment:
+      - PORT=8080
+      - CUSTOM_DATABASE_URL=host=postgres port=5432 user=postgres password=admin dbname=restapi_dev sslmode=disable
+    volumes:
+      - ./backend:/app
+
+  migrate:
+    image: migrate/migrate
+    container_name: migrations
+    volumes:
+      - ./backend/migrations:/migrations
+    command:
+      [
+        "-path",
+        "/migrations",
+        "-database",
+        "postgres://postgres:admin@postgres:5432/restapi_dev?sslmode=disable",
+        "up",
+      ]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    links:
+      - postgres
+  
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend/front
+      dockerfile: Dockerfile
+      target: development
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend/front/src:/app/src
+
+volumes:
+  dbdata:
+  frontendData:
+  backendData:
