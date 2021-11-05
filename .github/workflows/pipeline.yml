@@ -29,7 +29,7 @@ jobs:
           context: ./backend
           file: ./Dockerfile.prod
           push: true
-          tags: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs_backend.$GITHUB_RUN_ID
+          tags: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY_backend.$GITHUB_RUN_ID
       
       - name: Build and push frontend
         id: docker_build_frontend
@@ -38,7 +38,7 @@ jobs:
           context: ./frontend/front
           file: ./Dockerfile.prod
           push: true
-          tags: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs_frontend.$GITHUB_RUN_ID
+          tags: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY_frontend.$GITHUB_RUN_ID
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
