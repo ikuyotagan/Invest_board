@@ -29,7 +29,7 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile.prod
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/invesy-board_backend:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/invesy-board:$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs_backend.$GITHUB_RUN_ID
       
       - name: Build and push frontend
         id: docker_build_frontend
@@ -38,7 +38,7 @@ jobs:
           context: ./frontend/front
           file: ./frontend/front/Dockerfile.prod
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/invesy-board_frontend:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/invesy-board:$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs_frontend.$GITHUB_RUN_ID
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
