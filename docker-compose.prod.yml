@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.8"
 
 services:
   
@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: restapi_dev
-      DATABASE_SSL: "false"
+      DATABASE_SSL: false
     ports:
       - 5432:5432
     healthcheck:
@@ -21,13 +21,10 @@ services:
       - dbdata:/var/lib/postgresql/data
 
   backend:
+    image: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs_backend.$GITHUB_RUN_ID
     container_name: backend
     links:
       - postgres
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.prod
-      target: production
     depends_on:
       postgres:
         condition: service_healthy
@@ -57,11 +54,8 @@ services:
       - postgres
   
   frontend:
+    image: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs_frontend.$GITHUB_RUN_ID
     container_name: frontend
-    build:
-      context: ./frontend/front
-      dockerfile: Dockerfile.prod
-      target: production
     ports:
       - 3000:80
     depends_on:
