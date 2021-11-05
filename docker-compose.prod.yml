@@ -21,7 +21,7 @@ services:
       - dbdata:/var/lib/postgresql/data
 
   backend:
-    image: ${{ secrets.DOCKER_HUB_USERNAME }}/invesy-board:backend_latest
+    image: artemchikus/invesy-board:backend_latest
     container_name: backend
     links:
       - postgres
@@ -54,7 +54,7 @@ services:
       - postgres
   
   frontend:
-    image: ${{ secrets.DOCKER_HUB_USERNAME }}/invesy-board:frontend_latest
+    image: artemchikus/invesy-board:frontend_latest
     container_name: frontend
     ports:
       - 3000:80
