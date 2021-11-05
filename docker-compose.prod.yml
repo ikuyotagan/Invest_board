@@ -21,7 +21,7 @@ services:
       - dbdata:/var/lib/postgresql/data
 
   backend:
-    image: ${{ secrets.DOCKER_HUB_USERNAME }}/invesy-board:$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs_backend.$GITHUB_RUN_ID
+    image: ${{ secrets.DOCKER_HUB_USERNAME }}/invesy-board:backend_latest
     container_name: backend
     links:
       - postgres
@@ -54,7 +54,7 @@ services:
       - postgres
   
   frontend:
-    image: ${{ secrets.DOCKER_HUB_USERNAME }}/invesy-board:$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs_frontend.$GITHUB_RUN_ID
+    image: ${{ secrets.DOCKER_HUB_USERNAME }}/invesy-board:frontend_latest
     container_name: frontend
     ports:
       - 3000:80
