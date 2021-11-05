@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.3"
 
 services:
   
@@ -21,7 +21,7 @@ services:
       - dbdata:/var/lib/postgresql/data
 
   backend:
-    image: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs_backend.$GITHUB_RUN_ID
+    image: artemchikus/invesy-board_backend:latest
     container_name: backend
     links:
       - postgres
@@ -54,7 +54,7 @@ services:
       - postgres
   
   frontend:
-    image: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs_frontend.$GITHUB_RUN_ID
+    image: artemchikus/invesy-board_frontend:latest
     container_name: frontend
     ports:
       - 3000:80
