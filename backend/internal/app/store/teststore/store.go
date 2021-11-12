@@ -6,7 +6,10 @@ import (
 )
 
 type Store struct {
-	userRepository *UserRepository
+	userRepository          *UserRepository
+	stockRepository         *StockRepository
+	candelRepository        *CandelRepository
+	personalStockRepository *PersonalStockRepository
 }
 
 func New() *Store {
@@ -24,4 +27,43 @@ func (s *Store) User() store.UserRepository {
 	}
 
 	return s.userRepository
+}
+
+func (s *Store) Stock() store.StockRepository {
+	if s.stockRepository != nil {
+		return s.stockRepository
+	}
+
+	s.stockRepository = &StockRepository{
+		store:  s,
+		stocks: make(map[int]*model.Stock),
+	}
+
+	return s.stockRepository
+}
+
+func (s *Store) Candel() store.CandelRepository {
+	if s.candelRepository != nil {
+		return s.candelRepository
+	}
+
+	s.candelRepository = &CandelRepository{
+		store:   s,
+		candels: make(map[int]*model.Candel),
+	}
+
+	return s.candelRepository
+}
+
+func (s *Store) PersonalStock() store.PersonalStockRepository {
+	if s.personalStockRepository != nil {
+		return s.personalStockRepository
+	}
+
+	s.personalStockRepository = &PersonalStockRepository{
+		store:          s,
+		personalStocks: make(map[int]*model.PersonalStock),
+	}
+
+	return s.personalStockRepository
 }

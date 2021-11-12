@@ -5,7 +5,7 @@ on:
       - withDockerAll
 jobs:
 
-   build:
+   build and deploy:
     name: Build
     runs-on: ubuntu-latest
     steps:
@@ -29,7 +29,7 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile.prod
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/invesy-board:backend_latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/invest-board:backend_latest
       
       - name: Build and push frontend
         id: docker_build_frontend
@@ -38,7 +38,7 @@ jobs:
           context: ./frontend/front
           file: ./frontend/front/Dockerfile.prod
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/invesy-board:frontend_latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/invest-board:frontend_latest
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}

@@ -7,10 +7,12 @@ import (
 )
 
 type User struct {
-	ID                int    `json:"id"`
-	Email             string `json:"email"`
-	Password          string `json:"password,omitempty"`
-	EncryptedPassword string `json:"-"`
+	ID                     int    `json:"id"`
+	Email                  string `json:"email"`
+	Password               string `json:"password,omitempty"`
+	EncryptedPassword      string `json:"-"`
+	TinkoffAPIKey          string `json:"tKey"`
+	EncryptedTinkoffAPIKey string `json:"-"`
 }
 
 func (u *User) Validate() error {
@@ -21,7 +23,7 @@ func (u *User) Validate() error {
 }
 
 func (u *User) BeforeCreate() error {
-	if len(u.Password) > 0 {
+	if len(u.Password) >= 8 {
 		enc, err := encryptSrting(u.Password)
 		if err != nil {
 			return err

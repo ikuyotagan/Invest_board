@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.8"
 
 services:
   
@@ -21,7 +21,7 @@ services:
       - dbdata:/var/lib/postgresql/data
 
   backend:
-    image: artemchikus/invesy-board:backend_latest
+    image: artemchikus/invest-board:backend_latest
     container_name: backend
     links:
       - postgres
@@ -54,7 +54,7 @@ services:
       - postgres
   
   frontend:
-    image: artemchikus/invesy-board:frontend_latest
+    image: artemchikus/invest-board:frontend_latest
     container_name: frontend
     ports:
       - 3000:80

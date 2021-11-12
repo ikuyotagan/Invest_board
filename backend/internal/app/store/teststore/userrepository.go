@@ -42,3 +42,14 @@ func (r *UserRepository) Find(id int) (*model.User, error) {
 
 	return u, nil
 }
+
+func (r *UserRepository) SetTinkoffKey(u *model.User) error {
+	u, ok := r.users[u.ID]
+	if !ok {
+		return store.ErrRecordNotFound
+	}
+
+	r.users[u.ID] = u
+
+	return nil
+}
