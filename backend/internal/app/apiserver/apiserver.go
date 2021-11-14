@@ -3,6 +3,7 @@ package apiserver
 import (
 	"database/sql"
 	"fmt"
+	"github.com/Artemchikus/api/internal/app/api/tinkoff"
 	"net/http"
 
 	"github.com/Artemchikus/api/internal/app/store/sqlstore"
@@ -14,7 +15,7 @@ func Start(config *Config) error {
 	if config.CustomDatabseURl != "" {
 		URL = config.CustomDatabseURl
 	}
-	
+
 	db, err := newDB(URL)
 	if err != nil {
 		return err
@@ -23,7 +24,8 @@ func Start(config *Config) error {
 	defer db.Close()
 	store := sqlstore.New(db)
 	sessionStore := newSessionStore(config.SessionKey)
-	srv := newServer(store, sessionStore) 
+	srv := newServer(store, sessionStore)
+	tinkoff.CandleStoring(store)
 
 	return http.ListenAndServe(config.BindAddr, srv)
 }
@@ -45,9 +47,9 @@ func newDB(databaseURL string) (*sql.DB, error) {
 func newSessionStore(sessionKey string) *sessions.CookieStore {
 	session := sessions.NewCookieStore([]byte(sessionKey))
 	session.Options = &sessions.Options{
-		Domain: "localhost",
-		Path: "/",
-		MaxAge: 3600 * 8,
+		Domain:   "localhost",
+		Path:     "/",
+		MaxAge:   3600 * 8,
 		HttpOnly: true,
 	}
 	return session

@@ -19,6 +19,14 @@ func (r *PersonalStockRepository) Create(ps *model.PersonalStock) error {
 	).Scan(&ps.ID)
 }
 
+func (r *PersonalStockRepository) UpdateBalance(ps *model.PersonalStock) error {
+	return r.store.db.QueryRow("UPDATE personal_stocks SET user_stock_value=$1 WHERE user_id=$2 AND stock_id=$3 RETURNING id",
+		ps.UserStockValue,
+		ps.UserID,
+		ps.StockID,
+	).Scan(&ps.ID)
+}
+
 func (r *PersonalStockRepository) Find(id int) (*model.PersonalStock, error) {
 	ps := &model.PersonalStock{}
 	if err := r.store.db.QueryRow(

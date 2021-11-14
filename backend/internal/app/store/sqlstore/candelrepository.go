@@ -143,3 +143,27 @@ func (r *CandelRepository) FindbyPeriodAndStokID(start, end time.Time, stockId i
 
 	return arrayC, nil
 }
+
+func (r *CandelRepository) FindLastByStockID(stockId int) (*model.Candel, error) {
+	c := &model.Candel{}
+	if err := r.store.db.QueryRow(
+		"SELECT id, open_price, close_price, lowest_price, highest_price, time, trading_volume, stock_id FROM candels WHERE stock_id = $1 ORDER BY time DESC LIMIT 1",
+		stockId,
+	).Scan(
+		&c.ID,
+		&c.OpenPrice,
+		&c.ClosePrice,
+		&c.LowestPrice,
+		&c.HighestPrice,
+		&c.Time,
+		&c.TradingVolume,
+		&c.StockID,
+	); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, store.ErrRecordNotFound
+		}
+		return nil, err
+	}
+
+	return c, nil
+}

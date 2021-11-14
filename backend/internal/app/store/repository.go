@@ -18,6 +18,7 @@ type StockRepository interface {
 	Find(int) (*model.Stock, error)
 	FindByName(string) (*model.Stock, error)
 	FindByFIGI(string) (*model.Stock, error)
+	GetAll() ([]*model.Stock, error)
 }
 
 type CandelRepository interface {
@@ -25,10 +26,12 @@ type CandelRepository interface {
 	Find(int) (*model.Candel, error)
 	FindByTimeAndStockID(time.Time, int) (*model.Candel, error)
 	FindbyPeriodAndStokID(time.Time, time.Time, int) ([]*model.Candel, error)
+	FindLastByStockID(int) (*model.Candel, error)
 }
 
 type PersonalStockRepository interface {
 	Create(*model.PersonalStock) error
+	UpdateBalance(*model.PersonalStock) error
 	Find(int) (*model.PersonalStock, error)
 	FindStocksByUserID(int) ([]*model.PersonalStock, error)
 	FindByUserIDAndStockID(int, int) (*model.PersonalStock, error)

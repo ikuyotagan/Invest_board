@@ -2,10 +2,9 @@ package main
 
 import (
 	"flag"
-	"log"
-
 	"github.com/Artemchikus/api/internal/app/apiserver"
 	"github.com/BurntSushi/toml"
+	"log"
 )
 
 var (
@@ -25,7 +24,11 @@ func main() {
 		log.Fatal(err)
 	}
 
+	//tinkoff.NewClient()
+	//defer tinkoff.CloseClient()
+	//tinkoff.StreamingListener()
+
 	if err := apiserver.Start(config); err != nil {
-		log.Fatal(err)
+		log.Fatalln(err)
 	}
 }

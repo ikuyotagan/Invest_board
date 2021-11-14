@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"github.com/Artemchikus/api/internal/app/api/tinkoff"
+	sdk "github.com/TinkoffCreditSystems/invest-openapi-go-sdk"
 	"net/http"
 	"time"
 
@@ -123,6 +125,7 @@ func (s *server) handleUsersCreate() http.HandlerFunc {
 	type request struct {
 		Email    string `json:"email"`
 		Password string `json:"password"`
+		Tkey     string `json:"tkey"`
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		req := &request{}
@@ -132,8 +135,9 @@ func (s *server) handleUsersCreate() http.HandlerFunc {
 		}
 
 		u := &model.User{
-			Email:    req.Email,
-			Password: req.Password,
+			Email:         req.Email,
+			Password:      req.Password,
+			TinkoffAPIKey: req.Tkey,
 		}
 
 		if _, err := s.store.User().FindByEmail(u.Email); err == nil {
@@ -145,6 +149,11 @@ func (s *server) handleUsersCreate() http.HandlerFunc {
 			s.error(w, r, http.StatusUnprocessableEntity, errSmallPassword)
 			return
 		}
+
+		/*if err := s.store.User().SetTinkoffKey(u); err != nil {
+			s.error(w, r, http.StatusBadRequest, err)
+			return
+		}*/
 
 		u.Sanitize()
 		s.respond(w, r, http.StatusCreated, u)
@@ -169,6 +178,16 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 			s.error(w, r, http.StatusUnauthorized, errIncorrectEmailOrPassword)
 			return
 		}
+
+		client := sdk.NewRestClient(u.TinkoffAPIKey)
+		acc, err := client.Accounts(context.WithValue(r.Context(), ctxKeyRequestID, u.ID))
+		stocks, err := client.Portfolio(context.WithValue(r.Context(), ctxKeyRequestID, u.ID), acc[0].ID)
+
+		tinkoff.SetData(&stocks.Positions, s.store, u.ID)
+		/*
+			for _, stock := range stocks.Positions{
+				tinkoff.SubscribeCandle(&stock.FIGI)
+			}*/
 
 		session, err := s.sessionStore.Get(r, sessionName)
 

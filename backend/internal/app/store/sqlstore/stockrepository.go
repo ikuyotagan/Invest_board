@@ -60,7 +60,7 @@ func (r *StockRepository) FindByName(name string) (*model.Stock, error) {
 
 func (r *StockRepository) FindByFIGI(figi string) (*model.Stock, error) {
 	s := &model.Stock{}
-	
+
 	if err := r.store.db.QueryRow(
 		"SELECT id, name, figi FROM stocks WHERE figi = $1",
 		figi,
@@ -76,4 +76,41 @@ func (r *StockRepository) FindByFIGI(figi string) (*model.Stock, error) {
 	}
 
 	return s, nil
+}
+
+func (r *StockRepository) GetAll() ([]*model.Stock, error) {
+	s := &model.Stock{}
+	arrS := make([]*model.Stock, 0)
+
+	rows, err := r.store.db.Query(
+		"SELECT id, name, figi FROM stocks",
+	)
+	if err != nil {
+		return nil, store.ErrRecordNotFound
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		if err := rows.Scan(
+			&s.ID,
+			&s.Name,
+			&s.FIGI,
+		); err != nil {
+			return nil, err
+		}
+
+		stock := &model.Stock{
+			ID:   s.ID,
+			Name: s.Name,
+			FIGI: s.FIGI,
+		}
+
+		arrS = append(arrS, stock)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, store.ErrRecordNotFound
+	}
+
+	return arrS, nil
 }
