@@ -27,6 +27,7 @@ type CandelRepository interface {
 	FindByTimeAndStockID(time.Time, int) (*model.Candel, error)
 	FindbyPeriodAndStokID(time.Time, time.Time, int) ([]*model.Candel, error)
 	FindLastByStockID(int) (*model.Candel, error)
+	FindLastByStockFIGI(string) (*model.Candel, error)
 }
 
 type PersonalStockRepository interface {

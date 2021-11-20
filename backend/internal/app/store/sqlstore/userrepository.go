@@ -72,12 +72,12 @@ func (r *UserRepository) SetTinkoffKey(u *model.User) error {
 		return err
 	}
 
-	if err := u.BeforeCreate(); err != nil {
-		return err
-	}
+	//if err := u.BeforeCreate(); err != nil {
+	//	return err
+	//}
 
 	return r.store.db.QueryRow("UPDATE users SET encrypted_tinkoff_key = $1 where id = $2 RETURNING id",
-		u.EncryptedTinkoffAPIKey,
+		u.TinkoffAPIKey,
 		u.ID,
 	).Scan(&u.ID)
 }

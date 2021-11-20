@@ -1,0 +1,10 @@
+POST http://localhost:8080/private/tinkoff/personal_stocks
+
+###
+
+POST http://localhost:8080/private/tinkoff/last_candle
+content-type: application/json
+
+{
+  "figi":"BBG004S68829"
+}

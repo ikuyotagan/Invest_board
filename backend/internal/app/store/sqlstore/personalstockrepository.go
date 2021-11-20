@@ -67,7 +67,7 @@ func (r *PersonalStockRepository) FindStocksByUserID(userId int) ([]*model.Perso
 	}
 
 	rows, err := r.store.db.Query(
-		"SELECT id, stock_id, user_id, user_stock_value FROM personal_stocks WHERE user_id = $1",
+		"SELECT personal_stocks.id, stock_id, name, figi, user_id, user_stock_value FROM personal_stocks, stocks WHERE user_id = $1 and stock_id = stocks.id",
 		userId,
 	)
 	if err != nil {
@@ -79,6 +79,8 @@ func (r *PersonalStockRepository) FindStocksByUserID(userId int) ([]*model.Perso
 		if err := rows.Scan(
 			&ps.ID,
 			&ps.StockID,
+			&ps.StockName,
+			&ps.StockFIGI,
 			&ps.UserID,
 			&ps.UserStockValue,
 		); err != nil {
@@ -88,6 +90,8 @@ func (r *PersonalStockRepository) FindStocksByUserID(userId int) ([]*model.Perso
 		personalStock := &model.PersonalStock{
 			ID:             ps.ID,
 			StockID:        ps.StockID,
+			StockName:      ps.StockName,
+			StockFIGI:      ps.StockFIGI,
 			UserID:         ps.UserID,
 			UserStockValue: ps.UserStockValue,
 		}

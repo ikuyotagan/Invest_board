@@ -10,7 +10,7 @@ import (
 
 var (
 	client *sdk.StreamingClient
-	token  = flag.String("token", "", "default token")
+	token  = flag.String("token", "t.zi-GzKc-R6kOQF3MqGFBCSCSKX-B4aed_OwhJbjqQZCL9va5cPlmiMRNRfCDMW2_cB7RhSylrxHLvX_AOlW10g", "default token")
 )
 
 func NewClient() {
