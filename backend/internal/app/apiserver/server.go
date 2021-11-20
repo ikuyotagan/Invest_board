@@ -133,7 +133,6 @@ func (s *server) handleUsersCreate() http.HandlerFunc {
 	type request struct {
 		Email    string `json:"email"`
 		Password string `json:"password"`
-		Tkey     string `json:"tkey"`
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		req := &request{}
@@ -143,9 +142,8 @@ func (s *server) handleUsersCreate() http.HandlerFunc {
 		}
 
 		u := &model.User{
-			Email:         req.Email,
-			Password:      req.Password,
-			TinkoffAPIKey: req.Tkey,
+			Email:    req.Email,
+			Password: req.Password,
 		}
 
 		if _, err := s.store.User().FindByEmail(u.Email); err == nil {
