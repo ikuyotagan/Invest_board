@@ -44,12 +44,24 @@ func (r *UserRepository) Find(id int) (*model.User, error) {
 }
 
 func (r *UserRepository) SetTinkoffKey(u *model.User) error {
-	u, ok := r.users[u.ID]
+	_, ok := r.users[u.ID]
 	if !ok {
 		return store.ErrRecordNotFound
 	}
 
-	r.users[u.ID] = u
+	r.users[u.ID].EncryptedTinkoffAPIKey = u.TinkoffAPIKey
 
+	return nil
+}
+
+func (r *UserRepository) IsTinkoffKey(id int) error {
+	u, ok := r.users[id]
+	if !ok {
+		return store.ErrRecordNotFound
+	}
+
+	if u.EncryptedTinkoffAPIKey == "" {
+		return store.ErrNoTinkoffKey
+	}
 	return nil
 }

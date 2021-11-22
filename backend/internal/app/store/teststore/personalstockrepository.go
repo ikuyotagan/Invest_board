@@ -50,3 +50,13 @@ func (r *PersonalStockRepository) FindByUserIDAndStockID(userId, stockId int) (*
 	}
 	return nil, store.ErrRecordNotFound
 }
+
+func (r *PersonalStockRepository) UpdateBalance(ps *model.PersonalStock) error {
+	for _, personalStocks := range r.personalStocks {
+		if personalStocks.UserID == ps.UserID && personalStocks.StockID == ps.StockID {
+			personalStocks.UserStockValue = ps.UserStockValue
+			return nil
+		}
+	}
+	return store.ErrRecordNotFound
+}

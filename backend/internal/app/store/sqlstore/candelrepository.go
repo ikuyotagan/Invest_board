@@ -167,28 +167,3 @@ func (r *CandelRepository) FindLastByStockID(stockId int) (*model.Candel, error)
 
 	return c, nil
 }
-
-func (r *CandelRepository) FindLastByStockFIGI(figi string) (*model.Candel, error) {
-	c := &model.Candel{}
-	if err := r.store.db.QueryRow(
-		"SELECT candels.id, open_price, close_price, lowest_price, highest_price, time, trading_volume, stock_id, figi FROM candels, stocks WHERE figi = $1 and stock_id = stocks.id ORDER BY time DESC LIMIT 1",
-		figi,
-	).Scan(
-		&c.ID,
-		&c.OpenPrice,
-		&c.ClosePrice,
-		&c.LowestPrice,
-		&c.HighestPrice,
-		&c.Time,
-		&c.TradingVolume,
-		&c.StockID,
-		&c.FIGI,
-	); err != nil {
-		if err == sql.ErrNoRows {
-			return nil, store.ErrRecordNotFound
-		}
-		return nil, err
-	}
-
-	return c, nil
-}

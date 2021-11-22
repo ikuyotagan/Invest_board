@@ -24,3 +24,32 @@
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+.App {
+  width: 100vw;
+  height: 100vh;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.Sidebar {
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 70px;
+}
+
+.grey-background {
+  background:#6c757d;;
+  color: black;
+  pointer-events: none;
+  cursor: default;
+}
+
+.default-background {
+  background: #212529;
+  color: #adb5bd;
+}

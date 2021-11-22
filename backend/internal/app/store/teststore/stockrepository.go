@@ -46,3 +46,13 @@ func (r *StockRepository) FindByFIGI(figi string) (*model.Stock, error) {
 
 	return nil, store.ErrRecordNotFound
 }
+
+func (r *StockRepository) GetAll() ([]*model.Stock, error) {
+	arrayS := make([]*model.Stock, 0)
+
+	for _, s := range r.stocks {
+		arrayS = append(arrayS, s)
+	}
+
+	return arrayS, nil
+}

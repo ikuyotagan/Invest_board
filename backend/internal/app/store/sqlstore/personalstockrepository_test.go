@@ -69,3 +69,20 @@ func TestPersonalStockRepository_FindStocksByUserID(t *testing.T) {
 	assert.NotNil(t, ps3)
 	assert.Equal(t, slisePs, ps3)
 }
+
+func TestPersonalStockRepository_UpdateBalance(t *testing.T) {
+	db, teardown := sqlstore.TestDB(t, databaseURL)
+	defer teardown("personal_stocks")
+
+	s := sqlstore.New(db)
+	ps1 := model.TestPersonalStock1(t)
+	ps2 := model.TestPersonalStock2(t)
+	s.PersonalStock().Create(ps1)
+	ps1.UserStockValue = ps2.UserStockValue
+	err := s.PersonalStock().UpdateBalance(ps1)
+	assert.NoError(t, err)
+
+	ps3, _ := s.PersonalStock().Find(ps1.ID)
+	assert.NotNil(t, ps3.UserStockValue)
+	assert.Equal(t, ps2.UserStockValue, ps3.UserStockValue)
+}

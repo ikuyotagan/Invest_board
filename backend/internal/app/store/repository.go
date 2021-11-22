@@ -11,6 +11,7 @@ type UserRepository interface {
 	Find(int) (*model.User, error)
 	FindByEmail(string) (*model.User, error)
 	SetTinkoffKey(*model.User) error
+	IsTinkoffKey(int) error
 }
 
 type StockRepository interface {
@@ -27,7 +28,7 @@ type CandelRepository interface {
 	FindByTimeAndStockID(time.Time, int) (*model.Candel, error)
 	FindbyPeriodAndStokID(time.Time, time.Time, int) ([]*model.Candel, error)
 	FindLastByStockID(int) (*model.Candel, error)
-	FindLastByStockFIGI(string) (*model.Candel, error)
+
 }
 
 type PersonalStockRepository interface {

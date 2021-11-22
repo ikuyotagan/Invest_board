@@ -1,5 +1,5 @@
 CREATE TABLE stocks (
   id bigserial not null primary key,
-  name varchar not null,
-  figi varchar not null
+  name varchar not null unique,
+  figi varchar not null unique
 );

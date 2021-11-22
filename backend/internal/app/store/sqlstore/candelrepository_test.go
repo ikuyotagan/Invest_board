@@ -72,3 +72,21 @@ func TestCandelRepository_FindbyPeriodAndStokID(t *testing.T) {
 	assert.NotNil(t, c3)
 	assert.Equal(t, sliseC, c3)
 }
+
+func TestCandelRepository_FindLastByStockID(t *testing.T) {
+	db, teardown := sqlstore.TestDB(t, databaseURL)
+	defer teardown("candels")
+
+	s := sqlstore.New(db)
+	c1 := model.TestCandel1(t)
+	c2 := model.TestCandel2(t)
+	_, err := s.Candel().FindLastByStockID(c1.StockID)
+	assert.EqualError(t, err, store.ErrRecordNotFound.Error())
+
+	s.Candel().Create(c1)
+	s.Candel().Create(c2)
+	c3, err := s.Candel().FindLastByStockID(c1.StockID)
+	assert.NoError(t, err)
+	assert.NotNil(t, c3)
+	assert.Equal(t, c2, c3)
+}

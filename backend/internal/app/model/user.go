@@ -11,7 +11,7 @@ type User struct {
 	Email                  string `json:"email"`
 	Password               string `json:"password,omitempty"`
 	EncryptedPassword      string `json:"-"`
-	TinkoffAPIKey          string `json:"tKey"`
+	TinkoffAPIKey          string `json:"tKey,omitempty"`
 	EncryptedTinkoffAPIKey string `json:"-"`
 }
 

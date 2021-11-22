@@ -12,6 +12,11 @@ func TestUser(t *testing.T) *User {
 	}
 }
 
+func TestTinkoffKey(t *testing.T) *string{
+	tkey := "t.zi-GzKc-R6kOQF3MqGFBCSCSKX-B4aed_OwhJbjqQZCL9va5cPlmiMRNRfCDMW2_cB7RhSylrxHLvX_AOlW10g"
+	return &tkey
+}
+
 func TinkoffAPITestUser(t *testing.T) *User {
 	return &User{
 		Email:         "user@gmail.com",
@@ -50,10 +55,17 @@ func TestCandel2(t *testing.T) *Candel {
 	}
 }
 
-func TestStock(t *testing.T) *Stock {
+func TestStock1(t *testing.T) *Stock {
 	return &Stock{
 		Name: "HP",
 		FIGI: "BBG000BLNNH6",
+	}
+}
+
+func TestStock2(t *testing.T) *Stock {
+	return &Stock{
+		Name: "TC",
+		FIGI: "ADJSKJDOSIJIJ",
 	}
 }
 

@@ -12,7 +12,7 @@ import (
 func TestStockRepository_Create(t *testing.T) {
 	s := teststore.New()
 
-	st := model.TestStock(t)
+	st := model.TestStock1(t)
 	assert.NoError(t, s.Stock().Create(st))
 	assert.NotNil(t, st)
 }
@@ -20,7 +20,7 @@ func TestStockRepository_Create(t *testing.T) {
 func TestStockRepository_FindByName(t *testing.T) {
 	s := teststore.New()
 
-	st1 := model.TestStock(t)
+	st1 := model.TestStock1(t)
 	_, err := s.Stock().FindByName(st1.Name)
 	assert.EqualError(t, err, store.ErrRecordNotFound.Error())
 
@@ -33,7 +33,7 @@ func TestStockRepository_FindByName(t *testing.T) {
 func TestStockRepository_Find(t *testing.T) {
 	s := teststore.New()
 
-	st1 := model.TestStock(t)
+	st1 := model.TestStock1(t)
 	_, err := s.Stock().Find(1)
 	assert.EqualError(t, err, store.ErrRecordNotFound.Error())
 
@@ -46,7 +46,7 @@ func TestStockRepository_Find(t *testing.T) {
 func TestStockRepository_FindByFIGI(t *testing.T) {
 	s := teststore.New()
 	
-	st1 := model.TestStock(t)
+	st1 := model.TestStock1(t)
 	_, err := s.Stock().FindByFIGI(st1.FIGI)
 	assert.EqualError(t, err, store.ErrRecordNotFound.Error())
 

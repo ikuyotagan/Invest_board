@@ -52,3 +52,22 @@ func (r *CandelRepository) FindbyPeriodAndStokID(start, end time.Time, stockId i
 
 	return arrayC, nil
 }
+
+func (r *CandelRepository) FindLastByStockID(stockId int) (*model.Candel, error) {
+	max, _ := time.Parse(time.RFC3339Nano, "2000-01-01T15:35:00Z")
+	start := max
+	maxCandel := &model.Candel{}
+
+	for _, c := range r.candels {
+		if c.StockID == stockId && c.Time.After(max) {
+			max = c.Time
+			maxCandel = c
+		}
+	}
+
+	if max.Equal(start) {
+		return nil, store.ErrRecordNotFound
+	}
+	
+	return maxCandel, nil
+}

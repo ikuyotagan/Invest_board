@@ -4,13 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/Artemchikus/api/internal/app/api/tinkoff"
-	sdk "github.com/TinkoffCreditSystems/invest-openapi-go-sdk"
 	"net/http"
 	"time"
 
+	"github.com/Artemchikus/api/internal/app/api/tinkoff"
 	"github.com/Artemchikus/api/internal/app/model"
 	"github.com/Artemchikus/api/internal/app/store"
+	sdk "github.com/TinkoffCreditSystems/invest-openapi-go-sdk"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -29,6 +29,7 @@ var (
 	errEmailAlreadyExists       = errors.New("email is already registered")
 	errSmallPassword            = errors.New("password needs at least 8 simbols")
 	errNoApiKey                 = errors.New("tinkoff api key needed")
+	errWrongName                = errors.New("no such name in db")
 )
 
 type ctxKey int8
@@ -63,7 +64,6 @@ func (s *server) configureRouter() {
 
 	s.router.HandleFunc("/sessions", s.handleOPTIONS()).Methods("OPTIONS")
 	s.router.HandleFunc("/users", s.handleOPTIONS()).Methods("OPTIONS")
-	s.router.HandleFunc("/logout", s.handleOPTIONS()).Methods("OPTIONS")
 
 	s.router.Use(s.handleCORS)
 
@@ -71,13 +71,23 @@ func (s *server) configureRouter() {
 	s.router.HandleFunc("/sessions", s.handleSessionsCreate()).Methods("POST")
 
 	private := s.router.PathPrefix("/private").Subrouter()
+
+	private.HandleFunc("/stocks", s.handleOPTIONS()).Methods("OPTIONS")
+	private.HandleFunc("/logout", s.handleOPTIONS()).Methods("OPTIONS")
+	private.HandleFunc("/candels", s.handleOPTIONS()).Methods("OPTIONS")
+
+
 	private.Use(s.authenticateUser)
+
 	private.HandleFunc("/whoami", s.handleWhoami()).Methods("GET")
 	private.HandleFunc("/logout", s.handleLogout()).Methods("POST")
 	private.HandleFunc("/set_tinkoff", s.handleSetTinkoff()).Methods("POST")
+	private.HandleFunc("/stocks", s.handleGetStocks()).Methods("GET")
+	private.HandleFunc("/candels", s.handleGetCandels()).Methods("POST")
 
 	withTinkoffKey := private.PathPrefix("/tinkoff").Subrouter()
 	withTinkoffKey.Use(s.isTinkoffKeyExist)
+	withTinkoffKey.HandleFunc("/proverka", s.handleTinkoffProverka()).Methods("GET")
 	withTinkoffKey.HandleFunc("/personal_stocks", s.handleGetPersonalStocks()).Methods("POST")
 	withTinkoffKey.HandleFunc("/last_candle", s.handleGetLastCandle()).Methods("POST")
 	withTinkoffKey.HandleFunc("/analytics", s.handleGetAnalytics()).Methods("POST")
@@ -156,11 +166,6 @@ func (s *server) handleUsersCreate() http.HandlerFunc {
 			return
 		}
 
-		/*if err := s.store.User().SetTinkoffKey(u); err != nil {
-			s.error(w, r, http.StatusBadRequest, err)
-			return
-		}*/
-
 		u.Sanitize()
 		s.respond(w, r, http.StatusCreated, u)
 	}
@@ -184,16 +189,6 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 			s.error(w, r, http.StatusUnauthorized, errIncorrectEmailOrPassword)
 			return
 		}
-
-		client := sdk.NewRestClient(u.TinkoffAPIKey)
-		acc, err := client.Accounts(context.WithValue(r.Context(), ctxKeyRequestID, u.ID))
-		stocks, err := client.Portfolio(context.WithValue(r.Context(), ctxKeyRequestID, u.ID), acc[0].ID)
-
-		tinkoff.SetData(&stocks.Positions, s.store, u.ID)
-		/*
-			for _, stock := range stocks.Positions{
-				tinkoff.SubscribeCandle(&stock.FIGI)
-			}*/
 
 		session, err := s.sessionStore.New(r, sessionName)
 		if err != nil {
@@ -228,8 +223,12 @@ func (s *server) respond(w http.ResponseWriter, r *http.Request, code int, data 
 
 func (s *server) authenticateUser(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		session, err := s.sessionStore.Get(r, sessionName)
+		if r.Method == "OPTIONS" {
+			next.ServeHTTP(w, r)
+			return
+		}
 
+		session, err := s.sessionStore.Get(r, sessionName)
 		if err != nil {
 			s.error(w, r, http.StatusInternalServerError, err)
 			return
@@ -253,29 +252,13 @@ func (s *server) authenticateUser(next http.Handler) http.Handler {
 
 func (s *server) isTinkoffKeyExist(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		session, err := s.sessionStore.Get(r, sessionName)
+		u := r.Context().Value(ctxKeyUser).(*model.User)
 
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAutheticated)
-			return
-		}
-
-		u, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAutheticated)
-			return
-		}
-
-		if u.TinkoffAPIKey == "" || &u.TinkoffAPIKey == nil {
+		if err := s.store.User().IsTinkoffKey(u.ID); err != nil {
 			s.error(w, r, http.StatusUnauthorized, errNoApiKey)
 			return
 		}
+
 		next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), ctxKeyUser, u)))
 	})
 }
@@ -283,6 +266,12 @@ func (s *server) isTinkoffKeyExist(next http.Handler) http.Handler {
 func (s *server) handleWhoami() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		s.respond(w, r, http.StatusOK, r.Context().Value(ctxKeyUser).(*model.User))
+	}
+}
+
+func (s *server) handleTinkoffProverka() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		s.respond(w, r, http.StatusOK, nil)
 	}
 }
 
@@ -309,18 +298,37 @@ func (s *server) handleSetTinkoff() http.HandlerFunc {
 	type request struct {
 		TinkoffAPIKey string `json:"tinkoffapikey"`
 	}
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		req := &request{}
 		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 			s.error(w, r, http.StatusBadRequest, err)
 			return
 		}
+
 		u := r.Context().Value(ctxKeyUser).(*model.User)
 
 		u.TinkoffAPIKey = req.TinkoffAPIKey
 
-		err := s.store.User().SetTinkoffKey(u)
+		client := sdk.NewRestClient(u.TinkoffAPIKey)
+		acc, err := client.Accounts(context.WithValue(r.Context(), ctxKeyRequestID, u.ID))
 		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		stocks, err := client.Portfolio(context.WithValue(r.Context(), ctxKeyRequestID, u.ID), acc[0].ID)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		if err := tinkoff.SetData(&stocks.Positions, s.store, u.ID); err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		if err := s.store.User().SetTinkoffKey(u); err != nil {
 			s.error(w, r, http.StatusInternalServerError, err)
 			return
 		}
@@ -345,7 +353,7 @@ func (s *server) handleGetPersonalStocks() http.HandlerFunc {
 
 func (s *server) handleGetLastCandle() http.HandlerFunc {
 	type request struct {
-		Figi string `json:"figi"`
+		Name string `json:"name"`
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		req := &request{}
@@ -353,9 +361,14 @@ func (s *server) handleGetLastCandle() http.HandlerFunc {
 			s.error(w, r, http.StatusBadRequest, err)
 			return
 		}
-		//u := r.Context().Value(ctxKeyUser).(*model.User)
 
-		lc, err := s.store.Candel().FindLastByStockFIGI(req.Figi)
+		stock, err := s.store.Stock().FindByName(req.Name)
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, errWrongName)
+			return
+		}
+
+		lc, err := s.store.Candel().FindLastByStockID(stock.ID)
 		if err != nil {
 			s.error(w, r, http.StatusInternalServerError, err)
 			return
@@ -371,5 +384,40 @@ func (s *server) handleGetAnalytics() http.HandlerFunc {
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		s.respond(w, r, http.StatusOK, nil)
+	}
+}
+
+func (s *server) handleGetStocks() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		stocks, err := s.store.Stock().GetAll()
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+		}
+
+		s.respond(w, r, http.StatusOK, stocks)
+	}
+}
+
+func (s *server) handleGetCandels() http.HandlerFunc {
+	type request struct {
+		Start   time.Time `json:"start"`
+		End     time.Time `json:"end"`
+		StockID int       `json:"stock_id"`
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		req := &request{}
+		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+			s.error(w, r, http.StatusBadRequest, err)
+			return
+		}
+
+		candels, err := s.store.Candel().FindbyPeriodAndStokID(req.Start, req.End, req.StockID)
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		s.respond(w, r, http.StatusOK, candels)
 	}
 }

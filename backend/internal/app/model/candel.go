@@ -11,5 +11,4 @@ type Candel struct {
 	LowestPrice   float32   `json:"lowest_price"`
 	TradingVolume float32   `json:"volume"`
 	StockID       int       `json:"stock_id"`
-	FIGI          string    `json:"figi"`
 }

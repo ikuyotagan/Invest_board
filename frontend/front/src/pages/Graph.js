@@ -20,7 +20,7 @@ const Graph = () => {
     const data = [];
 
     for (let i = 0; i < chartData.length; i++) {
-      data.push(chartData[i])
+      data.push(chartData[i]);
       labels.push(i.toString());
     }
 
@@ -28,7 +28,7 @@ const Graph = () => {
       labels,
       datasets: [
         {
-          label: "Ахуеть",
+          label: "Супер",
           data,
           borderWidth: 1,
         },

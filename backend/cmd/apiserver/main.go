@@ -24,10 +24,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	//tinkoff.NewClient()
-	//defer tinkoff.CloseClient()
-	//tinkoff.StreamingListener()
-
 	if err := apiserver.Start(config); err != nil {
 		log.Fatalln(err)
 	}

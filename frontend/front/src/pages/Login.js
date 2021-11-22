@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
+import { Form, Button } from "react-bootstrap";
 
 const Login = (props) => {
   const [email, setEmail] = useState("");
@@ -19,7 +20,6 @@ const Login = (props) => {
       }),
     });
 
-
     if (response.ok) {
       setRedirect(true);
 
@@ -30,6 +30,17 @@ const Login = (props) => {
       if (user.ok) {
         const userContent = await user.json();
         props.setName(userContent.email);
+
+        const isTinkoffKeyExist = await fetch(
+          "http://localhost:8080/private/tinkoff/proverka",
+          {
+            credentials: "include",
+          }
+        );
+
+        if (isTinkoffKeyExist.ok) {
+          props.setTKey(true);
+        }
       }
     }
   };
@@ -40,24 +51,26 @@ const Login = (props) => {
 
   return (
     <form onSubmit={submit}>
-      <h1 className="h3 mb-3 fw-normal">Please sign in</h1>
-      <input
-        type="email"
-        className="form-control"
-        placeholder="name@example.com"
-        required
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        className="form-control"
-        placeholder="Password"
-        required
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button className="w-100 btn btn-lg btn-primary" type="submit">
+      <h1 className="h3 mb-3 fw-normal">Please Sign in</h1>
+      <Form.Group className="mb-3" controlId="formBasicEmail">
+        <Form.Control
+          type="email"
+          className="form-control"
+          placeholder="name@example.com"
+          required
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <Form.Control
+          type="password"
+          className="form-control"
+          placeholder="Password"
+          required
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </Form.Group>
+      <Button className="w-100 btn btn-lg btn-primary" type="submit">
         Sign in
-      </button>
+      </Button>
     </form>
   );
 };

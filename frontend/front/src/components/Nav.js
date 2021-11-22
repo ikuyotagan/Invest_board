@@ -1,55 +1,62 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Navbar, Container, Nav } from "react-bootstrap";
 
-const Nav = (props) => {
+const Navigation = (props) => {
   const logout = async () => {
-    await fetch("http://localhost:8080/logout", {
+    const response = await fetch("http://localhost:8080/private/logout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
 
-    props.setName("");
-  };
+    console.log(response)
 
-  // const graph = async () => {
-  //   await fetch("http://localhost:8080/api/tinkoff", {
-  //     method: "GET",
-  //     headers: { "Content-Type": "application/json" },
-  //   });
-  // };
+    if (response.ok) {
+      props.setName("");
+    }
+  };
 
   let menu;
 
   if (props.name === "") {
     menu = (
-      <ul className="navbar-nav me-auto mb-2 mb-md-0">
-        <li className="nav-item">
-          <Link to="/login" className="nav-link active">
-            Login
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link to="/register" className="nav-link active">
-            Register
-          </Link>
-        </li>
-      </ul>
+      <Navbar bg="dark" variant="dark">
+        <Container>
+          <Nav>
+            <Nav.Link href="/login">Login</Nav.Link>
+            <Nav.Link href="/register">Register</Nav.Link>
+          </Nav>
+        </Container>
+      </Navbar>
+    );
+  } else if (props.tKey === true) {
+    menu = (
+      <Navbar bg="dark" variant="dark">
+        <Container>
+          <Nav>
+            <Nav.Link href="/login" onClick={logout}>
+              Logout
+            </Nav.Link>
+            <Nav.Link href="/set-key">Set Tinkoff API Key</Nav.Link>
+            <Nav.Link href="/perosnal-graph">Your Graphs</Nav.Link>
+          </Nav>
+        </Container>
+      </Navbar>
     );
   } else {
     menu = (
-      <ul className="navbar-nav me-auto mb-2 mb-md-0">
-        <li className="nav-item">
-          <Link to="/login" className="nav-link active" onClick={logout}>
-            Logout
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link to="/graph" className="nav-link active">
-            Graph
-          </Link>
-        </li>
-      </ul>
+      <Navbar bg="dark" variant="dark">
+        <Container>
+          <Nav>
+            <Nav.Link href="/login" onClick={logout}>
+              Logout
+            </Nav.Link>
+            <Nav.Link href="/set-key">Set Tinkoff API Key</Nav.Link>
+            <Nav.Link href="/graph">Graphs</Nav.Link>
+          </Nav>
+        </Container>
+      </Navbar>
     );
   }
 
@@ -65,4 +72,4 @@ const Nav = (props) => {
   );
 };
 
-export default Nav;
+export default Navigation;

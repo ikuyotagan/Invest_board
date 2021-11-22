@@ -1,13 +1,13 @@
 import React from "react";
 import { useState } from "react";
 import { Redirect } from "react-router-dom";
+import { Form, Button } from "react-bootstrap";
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(false);
   const [error, setError] = useState(" ");
-
 
   const submit = async (e) => {
     e.preventDefault();
@@ -25,8 +25,8 @@ const Register = () => {
 
     if (response.ok) {
       setRedirect(true);
-    } else{
-      setError(data.error)
+    } else {
+      setError(data.error);
     }
   };
 
@@ -34,33 +34,41 @@ const Register = () => {
     return <Redirect to="/login" />;
   }
 
-  let errorResponse = ""
+  let errorResponse = "";
 
-  if (error !== ""){
-    errorResponse = (<h1 style={{color: "red", fontSize: "15px",}} className="h3 mb-3 fw-normal">{error}</h1>)
+  if (error !== "") {
+    errorResponse = (
+      <h1
+        style={{ color: "red", fontSize: "15px" }}
+        className="h3 mb-3 fw-normal"
+      >
+        {error}
+      </h1>
+    );
   }
 
   return (
     <form onSubmit={submit}>
-      <h1 className="h3 mb-3 fw-normal">Please register</h1>
-      {errorResponse}
-      <input
-        type="email"
-        className="form-control"
-        placeholder="name@example.com"
-        required
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        className="form-control"
-        placeholder="Password"
-        required
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button className="w-100 btn btn-lg btn-primary" type="submit">
-        Submit
-      </button>
+      <h1 className="h3 mb-3 fw-normal">Please Register</h1>
+      <Form.Group className="mb-3" controlId="formBasicEmail">
+        <Form.Control
+          type="email"
+          className="form-control"
+          placeholder="name@example.com"
+          required
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <Form.Control
+          type="password"
+          className="form-control"
+          placeholder="Password"
+          required
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </Form.Group>
+      <Button className="w-100 btn btn-lg btn-primary" type="submit">
+        Register
+      </Button>
     </form>
   );
 };
