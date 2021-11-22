@@ -3,6 +3,7 @@ package apiserver
 import (
 	"database/sql"
 	"fmt"
+	"github.com/Artemchikus/api/internal/app/api/tinkoff"
 	"net/http"
 
 	"github.com/Artemchikus/api/internal/app/store/sqlstore"
@@ -23,6 +24,9 @@ func Start(config *Config) error {
 	defer db.Close()
 	store := sqlstore.New(db)
 	sessionStore := newSessionStore(config.SessionKey)
+
+	tinkoff.CandleStoring(store)
+
 	srv := newServer(store, sessionStore)
 
 	return http.ListenAndServe(config.BindAddr, srv)

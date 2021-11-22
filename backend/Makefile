@@ -1,3 +1,8 @@
+.PHONY: run
+build:
+	go run -v ./cmd/apiserver/main.go
+
+
 .PHONY: build
 build:
 	go build -v ./cmd/apiserver/main.go
