@@ -20,11 +20,12 @@ func CandleStoring(store store.Store) {
 		}
 		for _, stock := range stocks {
 			lastCandle, _ := store.Candel().FindLastByStockID(stock.ID)
+
 			candles := make([]sdk.Candle, 0)
 			if lastCandle != nil && time.Since(lastCandle.Time) > time.Hour*24 {
 				candles, err = client.Candles(ctx, lastCandle.Time, time.Now(), sdk.CandleInterval1Day, stock.FIGI)
-			} else {
-				lastCandl := time.Unix(time.Now().Unix() - 31556926, 0)
+			} else if lastCandle == nil {
+				lastCandl := time.Unix(time.Now().Unix()-31556926, 0)
 				candles, err = client.Candles(ctx, lastCandl, time.Now(), sdk.CandleInterval1Day, stock.FIGI)
 			}
 			if err != nil {
@@ -36,6 +37,7 @@ func CandleStoring(store store.Store) {
 					log.Fatal(errors.Errorf("Oh shit, ", err))
 				}
 			}
+			log.Printf("Загружено %d свечей по акции \"%s\"", len(candles), stock.Name)
 		}
 		time.Sleep(time.Hour * 24)
 		for {
