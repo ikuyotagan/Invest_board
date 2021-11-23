@@ -1,4 +1,4 @@
-import {useEffect, useState, React} from "react";
+import { useEffect, useState, React } from "react";
 import { MenuItem, SubMenu } from "react-pro-sidebar";
 
 const ChooseValueMenu = (props) => {
@@ -15,7 +15,7 @@ const ChooseValueMenu = (props) => {
       <div>
         <MenuItem
           className={
-            "Open Price" == props.value
+            "Open Price" === props.value
               ? "grey-background"
               : "default-background"
           }
@@ -25,7 +25,7 @@ const ChooseValueMenu = (props) => {
         </MenuItem>
         <MenuItem
           className={
-            "Close Price" == props.value
+            "Close Price" === props.value
               ? "grey-background"
               : "default-background"
           }
@@ -35,7 +35,7 @@ const ChooseValueMenu = (props) => {
         </MenuItem>
         <MenuItem
           className={
-            "Highest Price" == props.value
+            "Highest Price" === props.value
               ? "grey-background"
               : "default-background"
           }
@@ -45,7 +45,7 @@ const ChooseValueMenu = (props) => {
         </MenuItem>
         <MenuItem
           className={
-            "Lowest Price" == props.value
+            "Lowest Price" === props.value
               ? "grey-background"
               : "default-background"
           }
@@ -55,13 +55,13 @@ const ChooseValueMenu = (props) => {
         </MenuItem>
         <MenuItem
           className={
-            "Stock Value" == props.value
+            "Traiding Volume" === props.value
               ? "grey-background"
               : "default-background"
           }
           onClick={setValue}
         >
-          Stock Value
+          Traiding Volume
         </MenuItem>
       </div>
     );

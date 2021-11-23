@@ -7,23 +7,25 @@ import ChoosePeriodMenu from "./ChoosePeriodMenu";
 import { Button } from "react-bootstrap";
 
 const Sidebar = (props) => {
-  const [stocks, setStocks] = useState(props.stocks);
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(() => {
+    let d = new Date();
+    d.setFullYear(d.getFullYear() - 1);
+    return d;
+  });
   const [endDate, setEndDate] = useState(new Date());
   const [stockId, setStockId] = useState(1);
   const [value, setValue] = useState("Open Price");
+  const [stockName, setStockName] = useState(props.stockName);
 
   useEffect(() => {
-    setStocks(props.stocks)
-    console.log(stockId);
-    console.log(value)
-    console.log(startDate);
-    console.log(endDate);
-  }, [props.stocks, stockId, value, startDate, endDate]);
+    submit();
+  }, []);
 
-  const submit = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    setStockName(props.stockName);
+  }, [props.stockName]);
 
+  const submit = async () => {
     const response = await fetch("http://localhost:8080/private/candels", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -37,8 +39,53 @@ const Sidebar = (props) => {
 
     const content = await response.json();
 
-    if (content.ok) {
-      props.setchartData(content);
+    if (content.length > 0) {
+      let listCandels = [];
+      for (let i = 0; i < content.length; i++) {
+        let candel;
+        switch (value) {
+          case "Open price":
+            candel = {
+              time: new Date(content[i].time).toLocaleString(),
+              openPrice: content[i].open_price,
+            };
+            break;
+          case "Close Price":
+            candel = {
+              time: new Date(content[i].time).toLocaleString(),
+              openPrice: content[i].close_price,
+            };
+            break;
+          case "Highest Price":
+            candel = {
+              time: new Date(content[i].time).toLocaleString(),
+              openPrice: content[i].highest_price,
+            };
+            break;
+          case "Lowest Price":
+            candel = {
+              time: new Date(content[i].time).toLocaleString(),
+              openPrice: content[i].lowest_price,
+            };
+            break;
+          case "Traiding Volume":
+            candel = {
+              time: new Date(content[i].time).toLocaleString(),
+              openPrice: content[i].volume,
+            };
+            break;
+          default:
+            candel = {
+              time: new Date(content[i].time).toLocaleString(),
+              openPrice: content[i].open_price,
+            };
+            break;
+        }
+        listCandels.push(candel);
+      }
+
+      props.setchartData(listCandels);
+      props.setStockName(stockName);
     }
   };
 
@@ -62,7 +109,12 @@ const Sidebar = (props) => {
               marginLeft: "-8px",
             }}
           >
-            <ChooseStockMenu stocks={stocks} setStockId={setStockId} stockId={stockId}/>
+            <ChooseStockMenu
+              stocks={props.stocks}
+              setStockId={setStockId}
+              stockId={stockId}
+              setStockName={setStockName}
+            />
             <ChoosePeriodMenu
               startDate={startDate}
               endDate={endDate}

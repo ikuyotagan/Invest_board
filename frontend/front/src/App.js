@@ -22,20 +22,24 @@ function App() {
       if (user.ok) {
         const userContent = await user.json();
         setName(userContent.email);
-
-        const isTinkoffKeyExist = await fetch(
-          "http://localhost:8080/private/tinkoff/proverka",
-          {
-            credentials: "include",
-          }
-        );
-
-        if (isTinkoffKeyExist.ok) {
-          setTKey(true);
-        }
       }
     })();
-  }, [name, tKey]);
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const isTinkoffKeyExist = await fetch(
+        "http://localhost:8080/private/tinkoff/proverka",
+        {
+          credentials: "include",
+        }
+      );
+
+      if (isTinkoffKeyExist.ok) {
+        setTKey(true);
+      }
+    })();
+  }, [tKey]);
 
   return (
     <div className="App">
@@ -52,7 +56,7 @@ function App() {
             path="/login"
             component={() => <Login setName={setName} setTKey={setTKey} />}
           />
-          <Route path="/register" component={Register} /> 
+          <Route path="/register" component={Register} />
           <Route path="/graph" component={() => <GraphInterface />} />
           <Route
             path="/set-key"

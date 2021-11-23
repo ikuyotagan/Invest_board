@@ -1,49 +1,47 @@
-import {useState, React, useEffect} from "react";
+import { useState, React, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import { CDBContainer } from "cdbreact";
 
 const Chart = (props) => {
-  const [data, setData] = useState({
-    labels: [
-      "Eating",
-      "Drinking",
-      "Sleeping",
-      "Designing",
-      "Coding",
-      "Cycling",
-      "Running",
-    ],
-    datasets: [
-      {
-        label: "Tinkoff",
-        backgroundColor: "rgba(194, 116, 161, 0.5)",
-        borderColor: "rgb(194, 116, 161)",
-        data: [65, 59, 90, 81, 56, 55, 40],
-      },
-    ],
-  });
+  const [labels, setLabels] = useState([]);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    setData({
-      labels: [
-        "Eating",
-        "Drinking",
-        "Sleeping",
-        "Designing",
-        "Coding",
-        "Cycling",
-        "Running",
-      ],
+    let cLabels = [];
+    let cData = [];
+    for (let i = 0; i < props.chartData.length; i++) {
+      cLabels.push(props.chartData[i].time);
+      cData.push(props.chartData[i].openPrice);
+    }
+    setLabels(cLabels);
+    setData(cData);
+  }, [props.chartData]);
+
+  useEffect(() => {
+    setChart({
+      labels: labels,
       datasets: [
         {
-          label: "Tinkoff",
+          label: props.stockName,
           backgroundColor: "rgba(194, 116, 161, 0.5)",
           borderColor: "rgb(194, 116, 161)",
-          data: [65, 59, 90, 81, 56, 55, 40],
+          data: data,
         },
       ],
     });
-  }, [props.ChartData]);
+  }, [data, props.stockName]);
+
+  const [chart, setChart] = useState({
+    labels: labels,
+    datasets: [
+      {
+        label: props.stockName,
+        backgroundColor: "rgba(194, 116, 161, 0.5)",
+        borderColor: "rgb(194, 116, 161)",
+        data: data,
+      },
+    ],
+  });
 
   return (
     <div
@@ -57,8 +55,8 @@ const Chart = (props) => {
       }}
     >
       <CDBContainer>
-        <h3 className="mt-5">Tinkoff</h3>
-        <Line data={data} options={{ responsive: true }} />
+        <h3 className="mt-5">{props.stockName}</h3>
+        <Line data={chart} options={{ responsive: true }} />
       </CDBContainer>
     </div>
   );

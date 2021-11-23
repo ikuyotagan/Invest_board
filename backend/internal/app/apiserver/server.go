@@ -76,7 +76,6 @@ func (s *server) configureRouter() {
 	private.HandleFunc("/logout", s.handleOPTIONS()).Methods("OPTIONS")
 	private.HandleFunc("/candels", s.handleOPTIONS()).Methods("OPTIONS")
 
-
 	private.Use(s.authenticateUser)
 
 	private.HandleFunc("/whoami", s.handleWhoami()).Methods("GET")
@@ -86,9 +85,13 @@ func (s *server) configureRouter() {
 	private.HandleFunc("/candels", s.handleGetCandels()).Methods("POST")
 
 	withTinkoffKey := private.PathPrefix("/tinkoff").Subrouter()
+
+	withTinkoffKey.HandleFunc("/personal_stocks", s.handleOPTIONS()).Methods("OPTIONS")
+
 	withTinkoffKey.Use(s.isTinkoffKeyExist)
+
 	withTinkoffKey.HandleFunc("/proverka", s.handleTinkoffProverka()).Methods("GET")
-	withTinkoffKey.HandleFunc("/personal_stocks", s.handleGetPersonalStocks()).Methods("POST")
+	withTinkoffKey.HandleFunc("/personal_stocks", s.handleGetPersonalStocks()).Methods("GET")
 	withTinkoffKey.HandleFunc("/last_candle", s.handleGetLastCandle()).Methods("POST")
 	withTinkoffKey.HandleFunc("/analytics", s.handleGetAnalytics()).Methods("POST")
 }
@@ -252,6 +255,11 @@ func (s *server) authenticateUser(next http.Handler) http.Handler {
 
 func (s *server) isTinkoffKeyExist(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == "OPTIONS" {
+			next.ServeHTTP(w, r)
+			return
+		}
+
 		u := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if err := s.store.User().IsTinkoffKey(u.ID); err != nil {
@@ -347,6 +355,16 @@ func (s *server) handleGetPersonalStocks() http.HandlerFunc {
 			return
 		}
 
+		for _, p := range ps {
+			stock, err := s.store.Stock().Find(p.StockID)
+			if err != nil {
+				s.error(w, r, http.StatusInternalServerError, err)
+				return
+			}
+			p.StockFIGI = stock.FIGI
+			p.StockName = stock.Name
+		}
+		
 		s.respond(w, r, http.StatusOK, ps)
 	}
 }

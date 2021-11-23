@@ -1,7 +1,7 @@
 package model
 
 type PersonalStock struct {
-	ID             int     `json:"id"`
+	ID             int     `json:"-"`
 	UserID         int     `json:"user_id"`
 	StockID        int     `json:"stock_id"`
 	StockName      string  `json:"stock_name"`

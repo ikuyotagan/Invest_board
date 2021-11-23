@@ -7,14 +7,15 @@ const ChooseStockMenu = (props) => {
   const setId = async (e) => {
     e.preventDefault();
 
-    props.setStockId(e.currentTarget.id);
+    props.setStockId(parseInt(e.currentTarget.id));
+    props.setStockName(e.currentTarget.innerText);
   };
 
   useEffect(() => {
     const stocksList = props.stocks.map((stock) => (
       <MenuItem
         className={
-          stock.id == props.stockId ? "grey-background" : "default-background"
+          stock.id === props.stockId ? "grey-background" : "default-background"
         }
         onClick={setId}
         id={stock.id}

@@ -3,7 +3,7 @@ package model
 import "time"
 
 type Candel struct {
-	ID            int       `json:"id"`
+	ID            int       `json:"-"`
 	Time          time.Time `json:"time"`
 	OpenPrice     float32   `json:"open_price"`
 	ClosePrice    float32   `json:"close_price"`
