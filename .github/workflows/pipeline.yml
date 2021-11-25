@@ -65,7 +65,7 @@ jobs:
           deployment_mode: docker-compose
           copy_stack_file: true
           deploy_path: /root/app
-          stack_file_name: docker-compose.prod.yaml
+          stack_file_name: docker-compose.prod.yml
           args: up -d -build
           docker_prune: false
           pull_images_first: false
