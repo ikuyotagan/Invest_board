@@ -60,7 +60,7 @@ jobs:
         uses: wshihadeh/docker-deployment-action@v1
         with:
           remote_docker_host: root@$45.8.228.5
-          ssh_private_key: -----BEGIN OPENSSH PRIVATE KEY-----
+          ssh_private_key: "-----BEGIN OPENSSH PRIVATE KEY-----
           b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABlwAAAAdzc2gtcn
           NhAAAAAwEAAQAAAYEAnAT8dGbRF320R1OZdd7xICLwlbyAnnqTPiqlCMtYq3GoY+ZsX4+p
           L2rr86iDWjsuHXi6cwzmf5r71PXfsuxnvQ3OIwJqCeJUC2imDrRaR6KxZCbT7J2LwBWgrX
@@ -97,7 +97,7 @@ jobs:
           bbLWLjsrEhTyMLYlvAVoWYuvrACsQRtcqC/9AqiVhBJ16RIoY/nGrcjZKvFLiAxxHDnSmf
           KRy8XdhhdHlfIyTBd0/eHtgWCczXKjFeODXU8iXCmdNcsLAcE0TIQpFeU886db2kCP7tHh
           pdnUN3Hyt/9N0AAAAVZmlsYXJAREVTS1RPUC0wUE9NSkk4AQIDBAUG
-          -----END OPENSSH PRIVATE KEY-----
+          -----END OPENSSH PRIVATE KEY-----"
           ssh_public_key: 45.8.228.5 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJsuc8b7F1EnfiKrKN3vDE7FGgblYbV1TDOQ3tKn8wbm6H+mOD7PlkauHyfW09XCXhvTDHe8bzxq0c9add6WtvM=
           deployment_mode: docker-compose
           stack_file_name: docker-compose.prod.yaml
