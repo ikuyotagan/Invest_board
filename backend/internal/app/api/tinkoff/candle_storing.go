@@ -7,6 +7,7 @@ import (
 	sdk "github.com/TinkoffCreditSystems/invest-openapi-go-sdk"
 	"github.com/pkg/errors"
 	"log"
+	"net/http"
 	"time"
 )
 
@@ -16,7 +17,24 @@ func CandleStoring(store store.Store) {
 		ctx := context.WithValue(context.Background(), "Candle storing", "Fuck")
 		stocks, err := store.Stock().GetAll()
 		if err != nil {
-			log.Println(errors.Errorf("Oh shit, ", err))
+			stocksRaw, err := fuckUp(&ctx, client)
+			if err != nil {
+				log.Println(http.StatusInternalServerError, err)
+				return
+			}
+			for _, stockRaw := range stocksRaw.Positions {
+				stocks = append(stocks, StockConverter(&stockRaw))
+			}
+			for _, stock := range stocks {
+				_, err := store.Stock().FindByFIGI(stock.FIGI)
+				if err != nil {
+					err = store.Stock().Create(stock)
+					if err != nil {
+						log.Println(http.StatusInternalServerError, err)
+						return
+					}
+				}
+			}
 		}
 		for _, stock := range stocks {
 			lastCandle, _ := store.Candel().FindLastByStockID(stock.ID)
@@ -34,7 +52,7 @@ func CandleStoring(store store.Store) {
 			for _, candle := range candles {
 				err := store.Candel().Create(CandleConverter(&candle, stock.ID))
 				if err != nil {
-					log.Fatal(errors.Errorf("Oh shit, ", err))
+					log.Println(errors.Errorf("Oh shit, ", err))
 				}
 			}
 			log.Printf("Загружено %d свечей по акции \"%s\"", len(candles), stock.Name)
@@ -43,17 +61,17 @@ func CandleStoring(store store.Store) {
 		for {
 			stocks, err = store.Stock().GetAll()
 			if err != nil {
-				log.Fatal(errors.Errorf("Oh shit, ", err))
+				log.Println(errors.Errorf("Oh shit, ", err))
 			}
 			for _, stock := range stocks {
 				candles, err := client.Candles(ctx, time.Unix(time.Now().Unix()-int64(time.Hour.Seconds()), 0), time.Now(), sdk.CandleInterval1Day, stock.FIGI)
 				if err != nil {
-					log.Fatal(errors.Errorf("Oh shit, ", err))
+					log.Println(errors.Errorf("Oh shit, ", err))
 				}
 				for _, candle := range candles {
 					err := store.Candel().Create(CandleConverter(&candle, stock.ID))
 					if err != nil {
-						log.Fatal(errors.Errorf("Oh shit, ", err))
+						log.Println(errors.Errorf("Oh shit, ", err))
 					}
 				}
 			}
@@ -72,4 +90,19 @@ func CandleConverter(candle *sdk.Candle, stockId int) *model.Candel {
 		TradingVolume: float32(candle.Volume),
 		StockID:       stockId,
 	}
+}
+
+func fuckUp(ctx *context.Context, client *sdk.RestClient) (*sdk.Portfolio, error) {
+	acc, err := client.Accounts(*ctx)
+	if err != nil {
+		log.Println(http.StatusInternalServerError, err)
+		return nil, err
+	}
+
+	stocks, err := client.Portfolio(*ctx, acc[0].ID)
+	if err != nil {
+		log.Println(http.StatusInternalServerError, err)
+		return nil, err
+	}
+	return &stocks, nil
 }

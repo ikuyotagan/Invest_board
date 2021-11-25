@@ -3,7 +3,6 @@ package apiserver
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"net/http"
 	"time"
 
@@ -21,15 +20,6 @@ const (
 	sessionName        = "restapi"
 	ctxKeyUser  ctxKey = iota
 	ctxKeyRequestID
-)
-
-var (
-	errIncorrectEmailOrPassword = errors.New("incorrect email or password")
-	errNotAutheticated          = errors.New("not authenticated")
-	errEmailAlreadyExists       = errors.New("email is already registered")
-	errSmallPassword            = errors.New("password needs at least 8 simbols")
-	errNoApiKey                 = errors.New("tinkoff api key needed")
-	errWrongName                = errors.New("no such name in db")
 )
 
 type ctxKey int8
@@ -336,11 +326,6 @@ func (s *server) handleSetTinkoff() http.HandlerFunc {
 			return
 		}
 
-		if err := s.store.User().SetTinkoffKey(u); err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
 		s.respond(w, r, http.StatusOK, nil)
 	}
 }
@@ -364,7 +349,7 @@ func (s *server) handleGetPersonalStocks() http.HandlerFunc {
 			p.StockFIGI = stock.FIGI
 			p.StockName = stock.Name
 		}
-		
+
 		s.respond(w, r, http.StatusOK, ps)
 	}
 }
