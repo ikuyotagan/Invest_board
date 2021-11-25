@@ -67,6 +67,7 @@ jobs:
             docker kill $(docker ps -q)
             docker rm $(docker ps -a -q)
             cd app
+            git fetch
             git checkout origin/withDockerAll -- docker-compose.prod.yml
             docker-compose -f docker-compose.prod.yml up -d --build
             rm docker-compose.prod.yml

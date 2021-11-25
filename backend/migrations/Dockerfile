@@ -1,3 +1,3 @@
 FROM migrate/migrate
 
-COPY . .
+COPY . ./migrations
