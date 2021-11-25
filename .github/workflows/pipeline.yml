@@ -97,6 +97,7 @@ Z3kSAonMMJXIcX38rbJW+PZBeNqSKxxHZVpFts9xcRg2htSMAnCPAxJzT/9lPz8czzeCvO
 bbLWLjsrEhTyMLYlvAVoWYuvrACsQRtcqC/9AqiVhBJ16RIoY/nGrcjZKvFLiAxxHDnSmf
 KRy8XdhhdHlfIyTBd0/eHtgWCczXKjFeODXU8iXCmdNcsLAcE0TIQpFeU886db2kCP7tHh
 pdnUN3Hyt/9N0AAAAVZmlsYXJAREVTS1RPUC0wUE9NSkk4AQIDBAUG
+
 -----END RSA PRIVATE KEY-----"
           ssh_public_key: "45.8.228.5 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJsuc8b7F1EnfiKrKN3vDE7FGgblYbV1TDOQ3tKn8wbm6H+mOD7PlkauHyfW09XCXhvTDHe8bzxq0c9add6WtvM="
           deployment_mode: docker-compose
