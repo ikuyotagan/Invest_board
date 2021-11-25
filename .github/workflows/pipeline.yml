@@ -4,7 +4,7 @@ on:
     branches:
       - withDockerAll
 jobs:
-  build_and_deploy:
+  build:
     name: Build
     runs-on: ubuntu-latest
     steps:
@@ -44,14 +44,19 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./backend/migrations
-          file: ./bckend/migrations/Dockerfile
+          file: ./backend/migrations/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/invest-board:migrations_${{ env.GITHUB_SHA }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
 
-      - name: Deploy
+  deploy:
+    needs: build
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to remote server
         uses: wshihadeh/docker-deployment-action@v1
         with:
           remote_docker_host: ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
