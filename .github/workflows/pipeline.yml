@@ -53,6 +53,7 @@ jobs:
 
   deploy:
     needs: build
+    runs-on: ubuntu-latest
     - name: Deploy
       uses: appleboy/ssh-action@master
       with:
