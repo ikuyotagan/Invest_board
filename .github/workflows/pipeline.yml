@@ -28,7 +28,7 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile.prod
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/invest-board:backend_${{ env.GITHUB_SHA }}
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/invest-board:backend_${{ env:GITHUB_SHA }}
 
       - name: Build and push frontend
         id: docker_build_frontend
@@ -37,7 +37,7 @@ jobs:
           context: ./frontend/front
           file: ./frontend/front/Dockerfile.prod
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/invest-board:frontend_${{ env.GITHUB_SHA }}
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/invest-board:frontend_${{ env:GITHUB_SHA }}
 
       - name: Build and push migrations
         id: docker_build_migrations
@@ -46,7 +46,7 @@ jobs:
           context: ./backend/migrations
           file: ./backend/migrations/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/invest-board:migrations_${{ env.GITHUB_SHA }}
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/invest-board:migrations_${{ env:GITHUB_SHA }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
