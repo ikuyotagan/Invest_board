@@ -63,7 +63,9 @@ jobs:
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
           deployment_mode: docker-compose
+          copy_stack_file: true
+          deploy_path: /root/app
           stack_file_name: docker-compose.prod.yaml
           args: up -d -build
-          docker_prune: true
-          pull_images_first: true
+          docker_prune: false
+          pull_images_first: false
