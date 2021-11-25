@@ -28,7 +28,7 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile.prod
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/invest-board:backend_${{ env:GITHUB_SHA }}
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/invest-board:backend_$env.GITHUB_SHA
 
       - name: Build and push frontend
         id: docker_build_frontend
