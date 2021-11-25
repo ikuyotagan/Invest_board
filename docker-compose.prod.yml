@@ -35,10 +35,8 @@ services:
       - CUSTOM_DATABASE_URL=host=postgres port=5432 user=postgres password=admin dbname=restapi_dev sslmode=disable
 
   migrate:
-    image: migrate/migrate
+    image: artemchikus/invest-board:migrations_latest
     container_name: migrations
-    volumes:
-      - ./backend/migrations:/migrations
     command:
       [
         "-path",
