@@ -8,3 +8,6 @@ CREATE TABLE candels (
   stock_id bigserial not null,
   time timestamptz not null
 );
+
+create index if not exists idx_stock_id on candels (stock_id);
+create index if not exists idx_time on candels (time);
