@@ -3,8 +3,9 @@ package apiserver
 import (
 	"database/sql"
 	"fmt"
-	"github.com/Artemchikus/api/internal/app/api/tinkoff"
 	"net/http"
+
+	"github.com/Artemchikus/api/internal/app/api/tinkoff"
 
 	"github.com/Artemchikus/api/internal/app/store/sqlstore"
 	"github.com/gorilla/sessions"
@@ -29,7 +30,12 @@ func Start(config *Config) error {
 
 	srv := newServer(store, sessionStore)
 
-	return http.ListenAndServe(config.BindAddr, srv)
+	Addr := config.BindAddr
+	if config.CustomBindAddr != "" {
+		Addr = config.CustomBindAddr
+	}
+
+	return http.ListenAndServe(Addr, srv)
 }
 
 func newDB(databaseURL string) (*sql.DB, error) {

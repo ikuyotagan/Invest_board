@@ -31,7 +31,7 @@ services:
     ports:
       - 8080:4000
     environment:
-      - PORT=8080
+      - CUSTOM_BIND_ADDRESS=":4000"
       - CUSTOM_DATABASE_URL=host=postgres port=5432 user=postgres password=admin dbname=restapi_dev sslmode=disable
 
   migrate:
@@ -58,6 +58,8 @@ services:
       - 3000:80
     depends_on:
       - backend
+    links:
+      - "backend:localhost"
 
 volumes:
   dbdata:
