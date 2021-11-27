@@ -3,6 +3,7 @@ package apiserver
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 
@@ -326,6 +327,11 @@ func (s *server) handleSetTinkoff() http.HandlerFunc {
 			return
 		}
 
+		if err := s.store.User().SetTinkoffKey(u); err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
 		s.respond(w, r, http.StatusOK, nil)
 	}
 }
@@ -371,13 +377,17 @@ func (s *server) handleGetLastCandle() http.HandlerFunc {
 			return
 		}
 
-		lc, err := s.store.Candel().FindLastByStockID(stock.ID)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
+		u := r.Context().Value(ctxKeyUser).(*model.User)
+		ctx := context.Background()
+		c := sdk.NewRestClient(u.TinkoffAPIKey)
+		log.Println(time.Unix(time.Now().Unix()-75, 0), time.Now())
+		candle, err := c.Candles(ctx, time.Unix(time.Now().Unix()-120, 0), time.Now(), sdk.CandleInterval1Min, stock.FIGI)
+		if err != nil || len(candle) == 0 {
+			log.Printf("Sheeesh, ", err)
+			s.error(w, r, http.StatusNoContent, nil)
 		}
 
-		s.respond(w, r, http.StatusOK, lc)
+		s.respond(w, r, http.StatusOK, tinkoff.CandleConverter(&candle[0], stock.ID))
 	}
 }
 

@@ -52,3 +52,11 @@ GET http://localhost:8080/private/whoami
 ###
 
 OPTIONS http://localhost:8080/sessions
+
+###
+
+POST http://localhost:8080/private/set_tinkoff
+
+{
+    "tinkoffapikey":"t.zi-GzKc-R6kOQF3MqGFBCSCSKX-B4aed_OwhJbjqQZCL9va5cPlmiMRNRfCDMW2_cB7RhSylrxHLvX_AOlW10g"
+}
