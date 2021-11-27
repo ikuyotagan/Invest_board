@@ -355,7 +355,7 @@ func (s *server) handleGetPersonalStocks() http.HandlerFunc {
 			p.StockFIGI = stock.FIGI
 			p.StockName = stock.Name
 		}
-
+		
 		s.respond(w, r, http.StatusOK, ps)
 	}
 }

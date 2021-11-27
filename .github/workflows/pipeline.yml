@@ -4,12 +4,11 @@ on:
     branches:
       - withDockerAll
 jobs:
-
-   build and deploy:
+  build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Check Out Repo 
+      - name: Check Out Repo
         uses: actions/checkout@v2
 
       - name: Login to Docker Hub
@@ -30,7 +29,7 @@ jobs:
           file: ./backend/Dockerfile.prod
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/invest-board:backend_latest
-      
+
       - name: Build and push frontend
         id: docker_build_frontend
         uses: docker/build-push-action@v2
@@ -40,20 +39,36 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/invest-board:frontend_latest
 
+      - name: Build and push migrations
+        id: docker_build_migrations
+        uses: docker/build-push-action@v2
+        with:
+          context: ./backend/migrations
+          file: ./backend/migrations/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/invest-board:migrations_latest
+
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
 
-      - name: Deploy
+  deploy:
+    needs: build
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to reoute server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.PROVERKA }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             whoami
+            docker kill $(docker ps -q)
+            docker rm $(docker ps -a -q)
             cd app
-            git pull origin withDockerAll
+            git fetch
+            git checkout origin/withDockerAll -- docker-compose.prod.yml
             docker-compose -f docker-compose.prod.yml up -d --build
+            rm docker-compose.prod.yml
 
-
-    

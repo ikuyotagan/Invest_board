@@ -2,7 +2,7 @@
 Dockerfile
 Dockerfile.prod
 .dockerignore
-docker-compose.yaml
+docker-compose.yml
 main.exe
 rest.http
 .gitignore
