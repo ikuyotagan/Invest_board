@@ -66,6 +66,7 @@ jobs:
             whoami
             docker kill $(docker ps -q)
             docker rm $(docker ps -a -q)
+            docker images purge
             cd app
             git fetch
             git checkout origin/withDockerAll -- docker-compose.prod.yml

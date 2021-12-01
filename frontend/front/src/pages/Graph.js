@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 
 const Graph = () => {
-  const [chartData, setData] = useState({});
+  const [chartData, setData] = useState([]);
 
   const fetchData = async () => {
     const result = await fetch("http://localhost:8080/api/tinkoff");

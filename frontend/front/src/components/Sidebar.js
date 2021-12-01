@@ -26,7 +26,7 @@ const Sidebar = (props) => {
   }, [props.stockName]);
 
   const submit = async () => {
-    const response = await fetch("http://localhost:8080/private/candels", {
+    const response = await fetch("/api/private/candels", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -47,37 +47,37 @@ const Sidebar = (props) => {
           case "Open price":
             candel = {
               time: new Date(content[i].time).toLocaleString(),
-              openPrice: content[i].open_price,
+              price: content[i].open_price,
             };
             break;
           case "Close Price":
             candel = {
               time: new Date(content[i].time).toLocaleString(),
-              openPrice: content[i].close_price,
+              price: content[i].close_price,
             };
             break;
           case "Highest Price":
             candel = {
               time: new Date(content[i].time).toLocaleString(),
-              openPrice: content[i].highest_price,
+              price: content[i].highest_price,
             };
             break;
           case "Lowest Price":
             candel = {
               time: new Date(content[i].time).toLocaleString(),
-              openPrice: content[i].lowest_price,
+              price: content[i].lowest_price,
             };
             break;
           case "Traiding Volume":
             candel = {
               time: new Date(content[i].time).toLocaleString(),
-              openPrice: content[i].volume,
+              price: content[i].volume,
             };
             break;
           default:
             candel = {
               time: new Date(content[i].time).toLocaleString(),
-              openPrice: content[i].open_price,
+              price: content[i].open_price,
             };
             break;
         }

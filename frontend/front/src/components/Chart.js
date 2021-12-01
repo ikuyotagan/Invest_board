@@ -3,45 +3,37 @@ import { Line } from "react-chartjs-2";
 import { CDBContainer } from "cdbreact";
 
 const Chart = (props) => {
-  const [labels, setLabels] = useState([]);
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    let cLabels = [];
-    let cData = [];
-    for (let i = 0; i < props.chartData.length; i++) {
-      cLabels.push(props.chartData[i].time);
-      cData.push(props.chartData[i].openPrice);
-    }
-    setLabels(cLabels);
-    setData(cData);
-  }, [props.chartData]);
-
-  useEffect(() => {
-    setChart({
-      labels: labels,
-      datasets: [
-        {
-          label: props.stockName,
-          backgroundColor: "rgba(194, 116, 161, 0.5)",
-          borderColor: "rgb(194, 116, 161)",
-          data: data,
-        },
-      ],
-    });
-  }, [data, props.stockName]);
-
   const [chart, setChart] = useState({
-    labels: labels,
+    labels: "",
     datasets: [
       {
         label: props.stockName,
         backgroundColor: "rgba(194, 116, 161, 0.5)",
         borderColor: "rgb(194, 116, 161)",
-        data: data,
+        data: "",
       },
     ],
   });
+
+  useEffect(() => {
+    let Labels = [];
+    let Data = [];
+    for (let i = 0; i < props.chartData.length; i++) {
+      Labels.push(props.chartData[i].time);
+      Data.push(props.chartData[i].price);
+    }
+    setChart({
+      labels: Labels,
+      datasets: [
+        {
+          label: props.stockName,
+          backgroundColor: "rgba(194, 116, 161, 0.5)",
+          borderColor: "rgb(194, 116, 161)",
+          data: Data,
+        },
+      ],
+    });
+  }, [props.chartData]);
 
   return (
     <div

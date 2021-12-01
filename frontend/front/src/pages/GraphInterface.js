@@ -7,21 +7,21 @@ const GraphInterface = () => {
   const [chartData, setchartData] = useState([]);
   const [stockName, setStockName] = useState("");
 
-  const fetchData = async () => {
-    const result = await fetch("http://localhost:8080/private/stocks", {
-      credentials: "include",
-    });
-
-    if (result.ok) {
-      const data = await result.json();
-
-      setStockName(data[0].name);
-
-      setStocks(data);
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      const result = await fetch("/api/private/stocks", {
+        credentials: "include",
+      });
+
+      if (result.ok) {
+        const data = await result.json();
+
+        setStockName(data[0].name);
+
+        setStocks(data);
+      }
+    };
+    
     fetchData();
   }, []);
 

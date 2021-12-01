@@ -8,7 +8,7 @@ const SetTinkoffKey = (props) => {
   const submit = async (e) => {
     e.preventDefault();
 
-    const response = await fetch("http://localhost:8080/private/set_tinkoff", {
+    const response = await fetch("/api/private/set_tinkoff", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
