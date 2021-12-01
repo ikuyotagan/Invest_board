@@ -4,13 +4,11 @@ import { Navbar, Container, Nav } from "react-bootstrap";
 
 const Navigation = (props) => {
   const logout = async () => {
-    const response = await fetch("http://localhost:8080/private/logout", {
+    const response = await fetch("/api/private/logout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
-
-    console.log(response)
 
     if (response.ok) {
       props.setName("");

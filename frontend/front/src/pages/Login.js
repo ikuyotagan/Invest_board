@@ -10,7 +10,7 @@ const Login = (props) => {
   const submit = async (e) => {
     e.preventDefault();
 
-    const response = await fetch("http://localhost:8080/sessions", {
+    const response = await fetch("/api/sessions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -23,7 +23,7 @@ const Login = (props) => {
     if (response.ok) {
       setRedirect(true);
 
-      const user = await fetch("http://localhost:8080/private/whoami", {
+      const user = await fetch("/api/private/whoami", {
         credentials: "include",
       });
 
@@ -32,7 +32,7 @@ const Login = (props) => {
         props.setName(userContent.email);
 
         const isTinkoffKeyExist = await fetch(
-          "http://localhost:8080/private/tinkoff/proverka",
+          "/api/private/tinkoff/proverka",
           {
             credentials: "include",
           }
@@ -52,7 +52,7 @@ const Login = (props) => {
   return (
     <form onSubmit={submit}>
       <h1 className="h3 mb-3 fw-normal">Please Sign in</h1>
-      <Form.Group className="mb-3" controlId="formBasicEmail">
+      <Form.Group className="mb-3">
         <Form.Control
           type="email"
           className="form-control"

@@ -15,7 +15,7 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      const user = await fetch("http://localhost:8080/private/whoami", {
+      const user = await fetch("/api/private/whoami", {
         credentials: "include",
       });
 
@@ -28,12 +28,9 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      const isTinkoffKeyExist = await fetch(
-        "http://localhost:8080/private/tinkoff/proverka",
-        {
-          credentials: "include",
-        }
-      );
+      const isTinkoffKeyExist = await fetch("/api/private/tinkoff/proverka", {
+        credentials: "include",
+      });
 
       if (isTinkoffKeyExist.ok) {
         setTKey(true);

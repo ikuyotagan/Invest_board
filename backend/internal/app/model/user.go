@@ -11,7 +11,7 @@ type User struct {
 	Email                  string `json:"email"`
 	Password               string `json:"password,omitempty"`
 	EncryptedPassword      string `json:"-"`
-	TinkoffAPIKey          string `json:"tKey,omitempty"`
+	TinkoffAPIKey          string `json:""`
 	EncryptedTinkoffAPIKey string `json:"-"`
 }
 
@@ -36,6 +36,7 @@ func (u *User) BeforeCreate() error {
 
 func (u *User) Sanitize() {
 	u.Password = ""
+	u.TinkoffAPIKey = ""
 }
 
 func (u *User) ComparePassword(password string) bool {

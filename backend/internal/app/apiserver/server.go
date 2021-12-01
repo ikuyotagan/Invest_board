@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/Artemchikus/api/internal/app/api/tinkoff"
@@ -22,6 +23,10 @@ const (
 	ctxKeyRequestID
 )
 
+var (
+	CustomFrontURl = ""
+)
+
 type ctxKey int8
 
 type server struct {
@@ -38,6 +43,7 @@ func newServer(store store.Store, sessionStore sessions.Store) *server {
 		store:        store,
 		sessionStore: sessionStore,
 	}
+	CustomFrontURl = os.Getenv("CUSTOM_FRONT_URL")
 
 	s.configureRouter()
 
@@ -87,8 +93,14 @@ func (s *server) configureRouter() {
 }
 
 func (s *server) handleOPTIONS() http.HandlerFunc {
+	URL := "http://localhost:3000"
+
+	if CustomFrontURl != "" {
+		URL = CustomFrontURl
+	}
+
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Origin", URL)
 		if r.Method == http.MethodOptions {
 			return
 		}
@@ -104,8 +116,14 @@ func (s *server) setRequestID(next http.Handler) http.Handler {
 }
 
 func (s *server) handleCORS(next http.Handler) http.Handler {
+	URL := "http://localhost:3000"
+
+	if CustomFrontURl != "" {
+		URL = CustomFrontURl
+	}
+
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Origin", URL)
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS, POST")
 		w.Header().Set("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers")
@@ -356,7 +374,7 @@ func (s *server) handleGetPersonalStocks() http.HandlerFunc {
 
 func (s *server) handleGetLastCandle() http.HandlerFunc {
 	type request struct {
-		Name string `json:"name"`
+		ID int `json:"id"`
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		req := &request{}
@@ -365,19 +383,22 @@ func (s *server) handleGetLastCandle() http.HandlerFunc {
 			return
 		}
 
-		stock, err := s.store.Stock().FindByName(req.Name)
+		stock, err := s.store.Stock().Find(req.ID)
 		if err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, errWrongName)
 			return
 		}
 
-		lc, err := s.store.Candel().FindLastByStockID(stock.ID)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
+		u := r.Context().Value(ctxKeyUser).(*model.User)
+		ctx := context.Background()
+		c := sdk.NewRestClient(u.TinkoffAPIKey)
+		candle, err := c.Candles(ctx, time.Unix(time.Now().Unix()-120, 0), time.Now(), sdk.CandleInterval1Min, stock.FIGI)
+		if err != nil || len(candle) == 0 {
+			s.error(w, r, http.StatusNoContent, nil)
 			return
 		}
 
-		s.respond(w, r, http.StatusOK, lc)
+		s.respond(w, r, http.StatusOK, tinkoff.CandleConverter(&candle[0], stock.ID))
 	}
 }
 
