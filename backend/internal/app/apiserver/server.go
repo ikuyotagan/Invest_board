@@ -402,6 +402,7 @@ func (s *server) handleGetLastCandle() http.HandlerFunc {
 		if err != nil || len(candle) == 0 || candle == nil {
 			log.Printf("Sheeesh, ", err)
 			s.error(w, r, http.StatusNoContent, nil)
+			return
 		}
 
 		s.respond(w, r, http.StatusOK, tinkoff.CandleConverter(&candle[0], stock.ID))
