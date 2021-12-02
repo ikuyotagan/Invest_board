@@ -3,8 +3,9 @@ package apiserver
 import (
 	"context"
 	"encoding/json"
-	"net/http"
+	"errors"
 	"log"
+	"net/http"
 	"os"
 	"time"
 
@@ -399,9 +400,12 @@ func (s *server) handleGetLastCandle() http.HandlerFunc {
 		ctx := context.Background()
 		c := sdk.NewRestClient(u.TinkoffAPIKey)
 		candle, err := c.Candles(ctx, time.Unix(time.Now().Unix()-119, 0), time.Now(), sdk.CandleInterval1Min, stock.FIGI)
-		if err != nil || len(candle) == 0 || candle == nil {
+		if err != nil || len(candle) == 0 {
 			log.Printf("Sheeesh, ", err)
-			s.error(w, r, http.StatusNoContent, nil)
+			if err == nil {
+				err = errors.New("Sheesh, биржа закрыта")
+			}
+			s.error(w, r, http.StatusNoContent, err)
 			return
 		}
 
