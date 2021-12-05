@@ -36,7 +36,7 @@ function App() {
         setTKey(true);
       }
     })();
-  }, [tKey]);
+  }, []);
 
   return (
     <div className="App">
@@ -51,16 +51,19 @@ function App() {
           <Route path="/" exact component={() => <Home name={name} />} />
           <Route
             path="/login"
+            exact
             component={() => <Login setName={setName} setTKey={setTKey} />}
           />
-          <Route path="/register" component={Register} />
-          <Route path="/graph" component={() => <GraphInterface />} />
+          <Route path="/register" exact component={Register} />
+          <Route path="/graph" exact component={() => <GraphInterface />} />
           <Route
             path="/set-key"
+            exact
             component={() => <SetTinkoffKey tKey={tKey} />}
           />
           <Route
             path="/perosnal-graph"
+            exact
             component={() => <PersonalGraphInterface />}
           />
         </main>

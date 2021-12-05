@@ -33,7 +33,7 @@ services:
     environment:
       - CUSTOM_BIND_ADDRESS: :4000
       - CUSTOM_DATABASE_URL: host=postgres port=5432 user=postgres password=admin dbname=restapi_dev sslmode=disable
-      - CUSTOM_FRONT_URL: http://45.8.228.5:300
+      - CUSTOM_FRONT_URL: http://45.8.228.5:3000
 
   migrate:
     image: artemchikus/invest-board:migrations_latest

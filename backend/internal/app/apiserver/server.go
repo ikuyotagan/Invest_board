@@ -205,6 +205,7 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 
 		session, err := s.sessionStore.New(r, sessionName)
 		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
 			return
 		}
 

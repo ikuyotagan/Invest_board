@@ -50,6 +50,7 @@ const Register = () => {
   return (
     <form onSubmit={submit}>
       <h1 className="h3 mb-3 fw-normal">Please Register</h1>
+      {errorResponse}
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Control
           type="email"

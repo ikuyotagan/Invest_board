@@ -21,9 +21,13 @@ const GraphInterface = () => {
         setStocks(data);
       }
     };
-    
+
     fetchData();
   }, []);
+
+  useEffect(() => {
+    console.log(stockName + "LLL");
+  }, [stockName]);
 
   return (
     <div>

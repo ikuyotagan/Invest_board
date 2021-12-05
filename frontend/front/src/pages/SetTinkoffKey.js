@@ -3,7 +3,7 @@ import { Form, Button } from "react-bootstrap";
 
 const SetTinkoffKey = (props) => {
   const [tinkoffKey, setTinkoffKey] = useState("");
-  const [isKey, setIsKey] = useState(props.tKey)
+  const [isKey, setIsKey] = useState(props.tKey);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -26,14 +26,14 @@ const SetTinkoffKey = (props) => {
     e.preventDefault();
 
     setIsKey(false);
-  }
+  };
 
   let content;
 
   if (isKey === true) {
     content = (
       <div>
-        You already set Tinkoff API Key
+        <h1 className="h3 mb-3 fw-normal">You already set Tinkoff API Key</h1>
         <Button onClick={change} className="w-100 btn btn-lg btn-primary">
           Change Tinkoff API Key
         </Button>

@@ -22,7 +22,10 @@ const Sidebar = (props) => {
   }, []);
 
   useEffect(() => {
-    setStockName(props.stockName);
+    if (props.stockName !== "") {
+      setStockName(props.stockName);
+      console.log(")))");
+    }
   }, [props.stockName]);
 
   const submit = async () => {
@@ -40,6 +43,10 @@ const Sidebar = (props) => {
     const content = await response.json();
 
     if (content.length > 0) {
+      if (stockName !== "") {
+        props.setStockName(stockName);
+      }
+
       let listCandels = [];
       for (let i = 0; i < content.length; i++) {
         let candel;
@@ -85,7 +92,6 @@ const Sidebar = (props) => {
       }
 
       props.setchartData(listCandels);
-      props.setStockName(stockName);
     }
   };
 
