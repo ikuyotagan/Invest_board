@@ -71,3 +71,4 @@ func (r *CandelRepository) FindLastByStockID(stockId int) (*model.Candel, error)
 	
 	return maxCandel, nil
 }
+

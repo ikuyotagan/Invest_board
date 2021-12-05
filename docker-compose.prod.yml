@@ -6,10 +6,10 @@ services:
     container_name: postgres
     image: postgres:14.0-alpine
     environment:
-      - POSTGRES_USER: postgres
-      - POSTGRES_PASSWORD: admin
-      - POSTGRES_DB: restapi_dev
-      - DATABASE_SSL: "false"
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=restapi_dev
+      - DATABASE_SSL=false
     ports:
       - 5432:5432
     healthcheck:
@@ -31,9 +31,9 @@ services:
     ports:
       - 8080:4000
     environment:
-      - CUSTOM_BIND_ADDRESS: :4000
-      - CUSTOM_DATABASE_URL: host=postgres port=5432 user=postgres password=admin dbname=restapi_dev sslmode=disable
-      - CUSTOM_FRONT_URL: http://45.8.228.5:3000
+      - CUSTOM_BIND_ADDRESS=:4000
+      - CUSTOM_DATABASE_URL=host=postgres port=5432 user=postgres password=admin dbname=restapi_dev sslmode=disable
+      - CUSTOM_FRONT_URL=http://45.8.228.5:3000
 
   migrate:
     image: artemchikus/invest-board:migrations_latest
@@ -60,7 +60,7 @@ services:
     depends_on:
       - backend
     environment:
-      - PROXY_API: http://45.8.228.5:8080
+      - PROXY_API=http://45.8.228.5:8080
 
 volumes:
   dbdata:
