@@ -3,14 +3,14 @@ import { useEffect, useState, React } from "react";
 import PersonalSidebar from "../components/PersonalSidebar";
 import Chart from "../components/Chart";
 
-const PersonalGraphInterface = () => {
-  const [stocks, setStocks] = useState([]);
-  const [chartData, setchartData] = useState([]);
-  const [stockName, setStockName] = useState("");
+const PersonalGraphInterface = (props) => {
+  const [stocks, setStocks] = useState();
+  const [chartData, setchartData] = useState();
+  const [stockName, setStockName] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await fetch("/api/private/tinkoff/personal_stocks", {
+      const result = await fetch(props.api + "/private/tinkoff/personal_stocks", {
         credentials: "include",
       });
 
@@ -43,6 +43,7 @@ const PersonalGraphInterface = () => {
         setchartData={setchartData}
         setStockName={setStockName}
         stockName={stockName}
+        api={props.api}
       />
       <Chart chartData={chartData} stockName={stockName} />
     </div>

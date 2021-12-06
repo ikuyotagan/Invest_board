@@ -11,7 +11,7 @@ const Login = (props) => {
   const submit = async (e) => {
     e.preventDefault();
 
-    const response = await fetch("/api/sessions", {
+    const response = await fetch(props.api + "/sessions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -24,7 +24,7 @@ const Login = (props) => {
     if (response.ok) {
       setRedirect(true);
 
-      const user = await fetch("/api/private/whoami", {
+      const user = await fetch(props.api + "/private/whoami", {
         credentials: "include",
       });
 
@@ -32,7 +32,7 @@ const Login = (props) => {
         const userContent = await user.json();
         props.setName(userContent.email);
 
-        const isTinkoffKeyExist = await fetch("/api/private/tinkoff/proverka", {
+        const isTinkoffKeyExist = await fetch(props.api + "/private/tinkoff/proverka", {
           credentials: "include",
         });
 

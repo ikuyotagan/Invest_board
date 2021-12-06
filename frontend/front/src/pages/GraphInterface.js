@@ -2,14 +2,14 @@ import { React, useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import Chart from "../components/Chart";
 
-const GraphInterface = () => {
-  const [stocks, setStocks] = useState([]);
-  const [chartData, setchartData] = useState([]);
-  const [stockName, setStockName] = useState("");
+const GraphInterface = (props) => {
+  const [stocks, setStocks] = useState();
+  const [chartData, setchartData] = useState();
+  const [stockName, setStockName] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await fetch("/api/private/stocks", {
+      const result = await fetch(props.api + "/private/stocks", {
         credentials: "include",
       });
 
@@ -25,10 +25,6 @@ const GraphInterface = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log(stockName + "LLL");
-  }, [stockName]);
-
   return (
     <div>
       <Sidebar
@@ -36,6 +32,7 @@ const GraphInterface = () => {
         setchartData={setchartData}
         setStockName={setStockName}
         stockName={stockName}
+        api={props.api}
       />
       <Chart chartData={chartData} stockName={stockName} />
     </div>

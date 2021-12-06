@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 
 const SetTinkoffKey = (props) => {
-  const [tinkoffKey, setTinkoffKey] = useState("");
+  const [tinkoffKey, setTinkoffKey] = useState();
   const [isKey, setIsKey] = useState(props.tKey);
 
   const submit = async (e) => {
     e.preventDefault();
 
-    const response = await fetch("/api/private/set_tinkoff", {
+    const response = await fetch(props.api + "/private/set_tinkoff", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

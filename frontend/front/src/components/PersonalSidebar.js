@@ -15,23 +15,25 @@ const PersonalSidebar = (props) => {
   const [endDate, setEndDate] = useState(new Date());
   const [stockId, setStockId] = useState(1);
   const [value, setValue] = useState("Open Price");
-  const [stockName, setStockName] = useState(props.stockName);
-  const [dynamicData, setDynamicData] = useState([]);
-
-  let stopId;
+  const [stockName, setStockName] = useState();
+  const [dynamicData, setDynamicData] = useState();
+  const [stopId, setStopId] = useState();
 
   useEffect(() => {
     commonGraph();
   }, []);
 
   useEffect(() => {
-    setStockName(props.stockName);
+    if (props.stockName !== undefined) {
+      setStockName(props.stockName);
+    }
   }, [props.stockName]);
 
   const stream = () => {
     props.setchartData([]);
+    setDynamicData([]);
     const dynamicGraph = async () => {
-      const response = await fetch("/api/private/tinkoff/last_candle", {
+      const response = await fetch(props.api + "/private/tinkoff/last_candle", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -98,11 +100,12 @@ const PersonalSidebar = (props) => {
 
     dynamicGraph();
 
-    stopId = setInterval(dynamicGraph, 60000);
+    let stop = setInterval(dynamicGraph, 60000);
+    setStopId(stop);
   };
 
   const commonGraph = async () => {
-    const response = await fetch("/api/private/candels", {
+    const response = await fetch(props.api + "/private/candels", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -116,8 +119,6 @@ const PersonalSidebar = (props) => {
     const content = await response.json();
 
     if (content.length > 0) {
-      props.setStockName(stockName);
-
       let listCandels = [];
 
       for (let i = 0; i < content.length; i++) {
@@ -163,6 +164,9 @@ const PersonalSidebar = (props) => {
         listCandels.push(candel);
       }
       props.setchartData(listCandels);
+      if (stockName !== undefined) {
+        props.setStockName(stockName);
+      }
     }
   };
 
@@ -201,7 +205,10 @@ const PersonalSidebar = (props) => {
             <ChooseValueMenu value={value} setValue={setValue} />
             <Button
               style={{ marginLeft: "52px", marginTop: "10px" }}
-              onClick={(commonGraph, clearInterval(stopId))}
+              onClick={() => {
+                clearInterval(stopId);
+                commonGraph();
+              }}
             >
               See the Graph
             </Button>
@@ -225,7 +232,10 @@ const PersonalSidebar = (props) => {
             <ChooseValueMenu value={value} setValue={setValue} />
             <Button
               style={{ marginLeft: "52px", marginTop: "10px" }}
-              onClick={(stream, clearInterval(stopId))}
+              onClick={() => {
+                clearInterval(stopId);
+                stream();
+              }}
             >
               See the Graph
             </Button>

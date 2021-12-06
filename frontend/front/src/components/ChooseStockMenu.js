@@ -12,20 +12,24 @@ const ChooseStockMenu = (props) => {
   };
 
   useEffect(() => {
-    const stocksList = props.stocks.map((stock) => (
-      <MenuItem
-        className={
-          stock.id === props.stockId ? "grey-background" : "default-background"
-        }
-        onClick={setId}
-        id={stock.id}
-        key={stock.id}
-      >
-        {stock.name}
-      </MenuItem>
-    ));
+    if (props.stocks !== undefined) {
+      const stocksList = props.stocks.map((stock) => (
+        <MenuItem
+          className={
+            stock.id === props.stockId
+              ? "grey-background"
+              : "default-background"
+          }
+          onClick={setId}
+          id={stock.id}
+          key={stock.id}
+        >
+          {stock.name}
+        </MenuItem>
+      ));
 
-    setStocksList(stocksList);
+      setStocksList(stocksList);
+    }
   }, [props.stocks, props.stockId]);
 
   return <SubMenu title="Choose Stock">{stocksList}</SubMenu>;

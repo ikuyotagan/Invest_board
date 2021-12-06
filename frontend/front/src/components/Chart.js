@@ -16,23 +16,25 @@ const Chart = (props) => {
   });
 
   useEffect(() => {
-    let Labels = [];
-    let Data = [];
-    for (let i = 0; i < props.chartData.length; i++) {
-      Labels.push(props.chartData[i].time);
-      Data.push(props.chartData[i].price);
+    if (props.chartData !== undefined) {
+      let Labels = [];
+      let Data = [];
+      for (let i = 0; i < props.chartData.length; i++) {
+        Labels.push(props.chartData[i].time);
+        Data.push(props.chartData[i].price);
+      }
+      setChart({
+        labels: Labels,
+        datasets: [
+          {
+            label: props.stockName,
+            backgroundColor: "rgba(194, 116, 161, 0.5)",
+            borderColor: "rgb(194, 116, 161)",
+            data: Data,
+          },
+        ],
+      });
     }
-    setChart({
-      labels: Labels,
-      datasets: [
-        {
-          label: props.stockName,
-          backgroundColor: "rgba(194, 116, 161, 0.5)",
-          borderColor: "rgb(194, 116, 161)",
-          data: Data,
-        },
-      ],
-    });
   }, [props.chartData]);
 
   return (

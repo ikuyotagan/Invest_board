@@ -13,9 +13,11 @@ function App() {
   const [name, setName] = useState("");
   const [tKey, setTKey] = useState(false);
 
+  const api = process.env.PROXY_API || "http://localhost:8080";
+
   useEffect(() => {
     (async () => {
-      const user = await fetch("/api/private/whoami", {
+      const user = await fetch(api + "/private/whoami", {
         credentials: "include",
       });
 
@@ -28,7 +30,7 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      const isTinkoffKeyExist = await fetch("/api/private/tinkoff/proverka", {
+      const isTinkoffKeyExist = await fetch(api + "/private/tinkoff/proverka", {
         credentials: "include",
       });
 
@@ -46,25 +48,26 @@ function App() {
           setName={setName}
           tKey={tKey}
           setTKey={setTKey}
+          api={api}
         />
         <main className="form-signin">
           <Route path="/" exact component={() => <Home name={name} />} />
           <Route
             path="/login"
             exact
-            component={() => <Login setName={setName} setTKey={setTKey} />}
+            component={() => <Login setName={setName} setTKey={setTKey} api={api}/>}
           />
-          <Route path="/register" exact component={Register} />
-          <Route path="/graph" exact component={() => <GraphInterface />} />
+          <Route path="/register" exact component={Register} api={api}/>
+          <Route path="/graph" exact component={() => <GraphInterface api={api}/>} />
           <Route
             path="/set-key"
             exact
-            component={() => <SetTinkoffKey tKey={tKey} />}
+            component={() => <SetTinkoffKey tKey={tKey} api={api}/>}
           />
           <Route
             path="/perosnal-graph"
             exact
-            component={() => <PersonalGraphInterface />}
+            component={() => <PersonalGraphInterface api={api} />}
           />
         </main>
       </BrowserRouter>

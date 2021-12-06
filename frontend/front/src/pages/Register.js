@@ -3,16 +3,16 @@ import { useState } from "react";
 import { Redirect } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 
-const Register = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const Register = (props) => {
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
   const [redirect, setRedirect] = useState(false);
   const [error, setError] = useState(" ");
 
   const submit = async (e) => {
     e.preventDefault();
 
-    const response = await fetch("/api/users", {
+    const response = await fetch(props.api + "/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

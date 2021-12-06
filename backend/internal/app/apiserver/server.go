@@ -85,6 +85,7 @@ func (s *server) configureRouter() {
 	withTinkoffKey := private.PathPrefix("/tinkoff").Subrouter()
 
 	withTinkoffKey.HandleFunc("/personal_stocks", s.handleOPTIONS()).Methods("OPTIONS")
+	withTinkoffKey.HandleFunc("/last_candle", s.handleOPTIONS()).Methods("OPTIONS")
 
 	withTinkoffKey.Use(s.isTinkoffKeyExist)
 

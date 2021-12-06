@@ -15,21 +15,20 @@ const Sidebar = (props) => {
   const [endDate, setEndDate] = useState(new Date());
   const [stockId, setStockId] = useState(1);
   const [value, setValue] = useState("Open Price");
-  const [stockName, setStockName] = useState(props.stockName);
+  const [stockName, setStockName] = useState();
 
   useEffect(() => {
     submit();
   }, []);
 
   useEffect(() => {
-    if (props.stockName !== "") {
+    if (props.stockName !== undefined) {
       setStockName(props.stockName);
-      console.log(")))");
     }
   }, [props.stockName]);
 
   const submit = async () => {
-    const response = await fetch("/api/private/candels", {
+    const response = await fetch(props.api + "/private/candels", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -43,11 +42,8 @@ const Sidebar = (props) => {
     const content = await response.json();
 
     if (content.length > 0) {
-      if (stockName !== "") {
-        props.setStockName(stockName);
-      }
-
       let listCandels = [];
+
       for (let i = 0; i < content.length; i++) {
         let candel;
         switch (value) {
@@ -90,8 +86,10 @@ const Sidebar = (props) => {
         }
         listCandels.push(candel);
       }
-
       props.setchartData(listCandels);
+      if (stockName !== undefined) {
+        props.setStockName(stockName);
+      }
     }
   };
 
