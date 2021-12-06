@@ -55,14 +55,24 @@ function App() {
           <Route
             path="/login"
             exact
-            component={() => <Login setName={setName} setTKey={setTKey} api={api}/>}
+            component={() => (
+              <Login setName={setName} setTKey={setTKey} api={api} />
+            )}
           />
-          <Route path="/register" exact component={Register} api={api}/>
-          <Route path="/graph" exact component={() => <GraphInterface api={api}/>} />
+          <Route
+            path="/register"
+            exact
+            component={() => <Register api={api} />}
+          />
+          <Route
+            path="/graph"
+            exact
+            component={() => <GraphInterface api={api} />}
+          />
           <Route
             path="/set-key"
             exact
-            component={() => <SetTinkoffKey tKey={tKey} api={api}/>}
+            component={() => <SetTinkoffKey tKey={tKey} api={api} />}
           />
           <Route
             path="/perosnal-graph"
