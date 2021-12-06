@@ -15,6 +15,7 @@ const Register = (props) => {
     const response = await fetch(props.api + "/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({
         email,
         password,
@@ -51,7 +52,7 @@ const Register = (props) => {
     <form onSubmit={submit}>
       <h1 className="h3 mb-3 fw-normal">Please Register</h1>
       {errorResponse}
-      <Form.Group className="mb-3" controlId="formBasicEmail">
+      <Form.Group className="mb-3">
         <Form.Control
           type="email"
           className="form-control"
