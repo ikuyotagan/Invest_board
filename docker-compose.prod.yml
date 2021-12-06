@@ -60,7 +60,7 @@ services:
     depends_on:
       - backend
     environment:
-      - PROXY_API=http://45.8.228.5:8080
+      -  REACT_APP_PROXY_API=http://45.8.228.5:8080
 
 volumes:
   dbdata:

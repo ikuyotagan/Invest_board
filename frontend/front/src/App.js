@@ -13,7 +13,7 @@ function App() {
   const [name, setName] = useState("");
   const [tKey, setTKey] = useState(false);
 
-  const api = process.env.PROXY_API || "http://localhost:8080";
+  const api = process.env. REACT_APP_PROXY_API || "http://localhost:8080";
 
   useEffect(() => {
     (async () => {
