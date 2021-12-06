@@ -2,6 +2,8 @@ FROM node:16.13-alpine3.14 as build
 
 ENV NODE_ENV production
 
+ENV REACT_APP_PROXY_API http://45.8.228.5:8080
+
 WORKDIR /app
 
 COPY package.json .
