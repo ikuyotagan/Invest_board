@@ -18,6 +18,7 @@ const PersonalSidebar = (props) => {
   const [stockName, setStockName] = useState();
   const [dynamicData, setDynamicData] = useState();
   const [stopId, setStopId] = useState();
+  const [error, setError] = useState(" ");
 
   useEffect(() => {
     commonGraph();
@@ -44,6 +45,9 @@ const PersonalSidebar = (props) => {
 
       if (!response.ok) {
         clearInterval(stopId);
+        
+        const data = await response.json();
+        setError(data.error);
       } else {
         const content = await response.json();
 
@@ -170,78 +174,95 @@ const PersonalSidebar = (props) => {
     }
   };
 
+  let errorResponse = (
+    <h1
+      style={{
+        color: "red",
+        fontSize: "40px",
+        marginLeft: "300px",
+        marginTop: "-35px",
+      }}
+      className="h3 mb-3 fw-normal"
+    >
+      {error}
+    </h1>
+  );
+
   return (
-    <div className="Sidebar">
-      <ProSidebar>
-        <Menu>
-          <div
-            style={{
-              padding: "20px",
-              marginTop: "-15px",
-              marginLeft: "-8px",
-              color: "white",
-              fontSize: "20px",
-            }}
-          >
-            Stocks
-          </div>
-          <div
-            style={{
-              marginLeft: "-8px",
-            }}
-          >
-            <ChooseStockMenu
-              stocks={props.stocks}
-              setStockId={setStockId}
-              stockId={stockId}
-              setStockName={setStockName}
-            />
-            <ChoosePeriodMenu
-              startDate={startDate}
-              endDate={endDate}
-              setStartDate={setStartDate}
-              setEndDate={setEndDate}
-            />
-            <ChooseValueMenu value={value} setValue={setValue} />
-            <Button
-              style={{ marginLeft: "52px", marginTop: "10px" }}
-              onClick={() => {
-                clearInterval(stopId);
-                commonGraph();
-              }}
-            >
-              See the Graph
-            </Button>
+    <div>
+      <div>{errorResponse}</div>
+      <div className="Sidebar">
+        <ProSidebar>
+          <Menu>
             <div
               style={{
                 padding: "20px",
-                marginTop: "20px",
-                marginLeft: "0px",
+                marginTop: "-15px",
+                marginLeft: "-8px",
                 color: "white",
                 fontSize: "20px",
               }}
             >
-              Real Time Stock
+              Stocks
             </div>
-            <ChooseStockMenu
-              stocks={props.stocks}
-              setStockId={setStockId}
-              stockId={stockId}
-              setStockName={setStockName}
-            />
-            <ChooseValueMenu value={value} setValue={setValue} />
-            <Button
-              style={{ marginLeft: "52px", marginTop: "10px" }}
-              onClick={() => {
-                clearInterval(stopId);
-                stream();
+            <div
+              style={{
+                marginLeft: "-8px",
               }}
             >
-              See the Graph
-            </Button>
-          </div>
-        </Menu>
-      </ProSidebar>
+              <ChooseStockMenu
+                stocks={props.stocks}
+                setStockId={setStockId}
+                stockId={stockId}
+                setStockName={setStockName}
+              />
+              <ChoosePeriodMenu
+                startDate={startDate}
+                endDate={endDate}
+                setStartDate={setStartDate}
+                setEndDate={setEndDate}
+              />
+              <ChooseValueMenu value={value} setValue={setValue} />
+              <Button
+                style={{ marginLeft: "52px", marginTop: "10px" }}
+                onClick={() => {
+                  clearInterval(stopId);
+                  commonGraph();
+                }}
+              >
+                See the Graph
+              </Button>
+              <div
+                style={{
+                  padding: "20px",
+                  marginTop: "20px",
+                  marginLeft: "0px",
+                  color: "white",
+                  fontSize: "20px",
+                }}
+              >
+                Real Time Stock
+              </div>
+              <ChooseStockMenu
+                stocks={props.stocks}
+                setStockId={setStockId}
+                stockId={stockId}
+                setStockName={setStockName}
+              />
+              <ChooseValueMenu value={value} setValue={setValue} />
+              <Button
+                style={{ marginLeft: "52px", marginTop: "10px" }}
+                onClick={() => {
+                  clearInterval(stopId);
+                  stream();
+                }}
+              >
+                See the Graph
+              </Button>
+            </div>
+          </Menu>
+        </ProSidebar>
+      </div>
     </div>
   );
 };

@@ -405,7 +405,7 @@ func (s *server) handleGetLastCandle() http.HandlerFunc {
 		if err != nil || len(candle) == 0 {
 			log.Printf("Sheeesh, ", err)
 			if err == nil {
-				err = errors.New("Sheesh, биржа закрыта")
+				err = errors.New("can't get last candel(maybe stock exchange is closed)")
 			}
 			s.error(w, r, http.StatusNoContent, err)
 			return

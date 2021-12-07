@@ -32,9 +32,12 @@ const Login = (props) => {
         const userContent = await user.json();
         props.setName(userContent.email);
 
-        const isTinkoffKeyExist = await fetch(props.api + "/private/tinkoff/proverka", {
-          credentials: "include",
-        });
+        const isTinkoffKeyExist = await fetch(
+          props.api + "/private/tinkoff/proverka",
+          {
+            credentials: "include",
+          }
+        );
 
         if (isTinkoffKeyExist.ok) {
           props.setTKey(true);
@@ -46,18 +49,14 @@ const Login = (props) => {
     }
   };
 
-  let errorResponse = "";
-
-  if (error !== "") {
-    errorResponse = (
-      <h1
-        style={{ color: "red", fontSize: "15px" }}
-        className="h3 mb-3 fw-normal"
-      >
-        {error}
-      </h1>
-    );
-  }
+  let errorResponse = (
+    <h1
+      style={{ color: "red", fontSize: "15px" }}
+      className="h3 mb-3 fw-normal"
+    >
+      {error}
+    </h1>
+  );
 
   if (redirect) {
     return <Redirect to="/" />;

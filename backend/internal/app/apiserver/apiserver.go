@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/Artemchikus/api/internal/app/api/tinkoff"
 
@@ -54,8 +55,13 @@ func newDB(databaseURL string) (*sql.DB, error) {
 
 func newSessionStore(sessionKey string) *sessions.CookieStore {
 	session := sessions.NewCookieStore([]byte(sessionKey))
+	domain := "localhost"
+	customDomain := os.Getenv("CUSTOM_DOMAIN")
+	if customDomain != "" {
+		domain = customDomain
+	}
 	session.Options = &sessions.Options{
-		Domain:   "localhost",
+		Domain:   domain,
 		Path:     "/",
 		MaxAge:   3600 * 8,
 		HttpOnly: true,
