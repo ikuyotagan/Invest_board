@@ -43,13 +43,8 @@ const PersonalSidebar = (props) => {
         }),
       });
 
-      console.log(response);
-
       if (response.status === 204) {
-        clearInterval(stopId);
-        console.log(stopId);
-
-        // const data = await response.json();
+        clearInterval(stop);
         setError("stock is closed");
       } else {
         if (error !== " ") {
