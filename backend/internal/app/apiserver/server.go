@@ -403,9 +403,9 @@ func (s *server) handleGetLastCandle() http.HandlerFunc {
 		c := sdk.NewRestClient(u.TinkoffAPIKey)
 		candle, err := c.Candles(ctx, time.Unix(time.Now().Unix()-119, 0), time.Now(), sdk.CandleInterval1Min, stock.FIGI)
 		if err != nil || len(candle) == 0 {
-			log.Printf("Sheeesh, ", err)
+			log.Printf("Sheeesh, %s", err)
 			if err == nil {
-				err = errors.New("can't get last candel(maybe stock exchange is closed)")
+				err = errors.New("can't get last candel")
 			}
 			s.error(w, r, http.StatusNoContent, err)
 			return
@@ -420,6 +420,11 @@ func (s *server) handleGetAnalytics() http.HandlerFunc {
 		Figi string `json:"figi"`
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
+		req := &request{}
+		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+			s.error(w, r, http.StatusBadRequest, err)
+			return
+		}
 		s.respond(w, r, http.StatusOK, nil)
 	}
 }

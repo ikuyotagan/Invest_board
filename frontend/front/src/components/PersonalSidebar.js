@@ -43,12 +43,18 @@ const PersonalSidebar = (props) => {
         }),
       });
 
-      if (!response.ok) {
+      console.log(response);
+
+      if (response.status === 204) {
         clearInterval(stopId);
-        
-        const data = await response.json();
-        setError(data.error);
+        console.log(stopId);
+
+        // const data = await response.json();
+        setError("stock is closed");
       } else {
+        if (error !== " ") {
+          setError(" ");
+        }
         const content = await response.json();
 
         if (content !== undefined) {
@@ -177,10 +183,12 @@ const PersonalSidebar = (props) => {
   let errorResponse = (
     <h1
       style={{
+        position: "relative",
         color: "red",
-        fontSize: "40px",
-        marginLeft: "300px",
-        marginTop: "-35px",
+        fontSize: "8vw",
+        left: "330px",
+        top: "-75%",
+        zIndex: "4",
       }}
       className="h3 mb-3 fw-normal"
     >
@@ -189,8 +197,7 @@ const PersonalSidebar = (props) => {
   );
 
   return (
-    <div>
-      <div>{errorResponse}</div>
+    <div style={{ width: "100%", height: "100%" }}>
       <div className="Sidebar">
         <ProSidebar>
           <Menu>
@@ -263,6 +270,7 @@ const PersonalSidebar = (props) => {
           </Menu>
         </ProSidebar>
       </div>
+      {errorResponse}
     </div>
   );
 };

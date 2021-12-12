@@ -3,6 +3,9 @@
   max-width: 330px;
   padding: 15px;
   margin: auto;
+  z-index: 2;
+  position: absolute;
+  left: 35%;
 }
 
 .form-signin .checkbox {
@@ -10,7 +13,7 @@
 }
 
 .form-signin .form-floating:focus-within {
-  z-index: 2;
+  z-index: 3;
 }
 
 .form-signin input[type="email"] {
@@ -35,11 +38,18 @@ body {
   padding: 0;
 }
 
-.Sidebar {
+.Content{
+  width: 100%;
+  height: 89%;
+  position: fixed; 
+  top: 71px;
+}
+
+.Sidebar{
   height: 100%;
-  position: fixed;
-  left: 0;
-  top: 70px;
+  width: 37%;
+  position: "relative";
+  min-width: 246px;
 }
 
 .grey-background {

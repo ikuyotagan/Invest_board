@@ -35,21 +35,20 @@ const Chart = (props) => {
         ],
       });
     }
-  }, [props.chartData]);
+  }, [props.chartData, props.stockName]);
 
   return (
     <div
       style={{
-        marginTop: "-10px",
-        height: "700px",
-        position: "fixed",
-        left: "246px",
-        top: "50px",
-        width: "800px",
+        position: "relative",
+        left: "245px",
+        top: "-99%",
+        width: "65%",
+        height: "55%",
       }}
     >
-      <CDBContainer>
-        <h3 className="mt-5">{props.stockName}</h3>
+      <CDBContainer style={{paddingTop: "2px", paddingLeft: "15px"}}>
+        <h3>{props.stockName}</h3>
         <Line data={chart} options={{ responsive: true }} />
       </CDBContainer>
     </div>

@@ -65,14 +65,16 @@ function App() {
             component={() => <Register api={api} />}
           />
           <Route
-            path="/graph"
-            exact
-            component={() => <GraphInterface api={api} />}
-          />
-          <Route
             path="/set-key"
             exact
             component={() => <SetTinkoffKey tKey={tKey} api={api} />}
+          />
+        </main>
+        <main className="Content">
+          <Route
+            path="/graph"
+            exact
+            component={() => <GraphInterface api={api} />}
           />
           <Route
             path="/perosnal-graph"
