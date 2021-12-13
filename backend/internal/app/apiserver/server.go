@@ -402,7 +402,7 @@ func (s *server) handleGetLastCandle() http.HandlerFunc {
 		u := r.Context().Value(ctxKeyUser).(*model.User)
 		ctx := context.Background()
 		c := sdk.NewRestClient(u.TinkoffAPIKey)
-		candle, err := c.Candles(ctx, time.Unix(time.Now().Unix()-190, 0), time.Unix(time.Now().Unix()-71, 0), sdk.CandleInterval1Min, stock.FIGI)
+		candle, err := c.Candles(ctx, time.Unix(time.Now().Unix()-70, 0), time.Unix(time.Now().Unix()-10, 0), sdk.CandleInterval1Min, stock.FIGI)
 		if err != nil || len(candle) == 0 {
 			log.Printf("Sheeesh, %s", err)
 			if err == nil {
