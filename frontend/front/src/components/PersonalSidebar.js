@@ -31,6 +31,8 @@ const PersonalSidebar = (props) => {
   }, [props.stockName]);
 
   const stream = () => {
+    const now = new Date();
+    if (now.getSeconds() > 30)
     props.setchartData([]);
     setDynamicData([]);
     const dynamicGraph = async () => {
