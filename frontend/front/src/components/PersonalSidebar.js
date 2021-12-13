@@ -31,8 +31,6 @@ const PersonalSidebar = (props) => {
   }, [props.stockName]);
 
   const stream = () => {
-    const now = new Date();
-    if (now.getSeconds() > 30)
     props.setchartData([]);
     setDynamicData([]);
     const dynamicGraph = async () => {
@@ -45,6 +43,8 @@ const PersonalSidebar = (props) => {
         }),
       });
 
+      props.setStockName(stockName);
+
       if (response.status === 204) {
         clearInterval(stop);
         setError("stock is closed");
@@ -55,7 +55,6 @@ const PersonalSidebar = (props) => {
         const content = await response.json();
 
         if (content !== undefined) {
-          props.setStockName(stockName);
 
           let candel;
 
@@ -232,6 +231,7 @@ const PersonalSidebar = (props) => {
                 onClick={() => {
                   clearInterval(stopId);
                   commonGraph();
+                  setError(" ");
                 }}
               >
                 See the Graph
@@ -259,6 +259,7 @@ const PersonalSidebar = (props) => {
                 onClick={() => {
                   clearInterval(stopId);
                   stream();
+                  setError(" ");
                 }}
               >
                 See the Graph
