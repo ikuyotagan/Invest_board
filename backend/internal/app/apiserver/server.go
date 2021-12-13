@@ -73,6 +73,7 @@ func (s *server) configureRouter() {
 	private.HandleFunc("/stocks", s.handleOPTIONS()).Methods("OPTIONS")
 	private.HandleFunc("/logout", s.handleOPTIONS()).Methods("OPTIONS")
 	private.HandleFunc("/candels", s.handleOPTIONS()).Methods("OPTIONS")
+	private.HandleFunc("/set_tinkoff", s.handleOPTIONS()).Methods("OPTIONS")
 
 	private.Use(s.authenticateUser)
 
