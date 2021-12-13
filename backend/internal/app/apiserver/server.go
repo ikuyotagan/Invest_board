@@ -401,7 +401,7 @@ func (s *server) handleGetLastCandle() http.HandlerFunc {
 		u := r.Context().Value(ctxKeyUser).(*model.User)
 		ctx := context.Background()
 		c := sdk.NewRestClient(u.TinkoffAPIKey)
-		candle, err := c.Candles(ctx, time.Unix(time.Now().Unix()-119, 0), time.Now(), sdk.CandleInterval1Min, stock.FIGI)
+		candle, err := c.Candles(ctx, time.Unix(time.Now().Unix()-190, 0), time.Unix(time.Now().Unix()-71, 0), sdk.CandleInterval1Min, stock.FIGI)
 		if err != nil || len(candle) == 0 {
 			log.Printf("Sheeesh, %s", err)
 			if err == nil {
@@ -411,7 +411,7 @@ func (s *server) handleGetLastCandle() http.HandlerFunc {
 			return
 		}
 
-		s.respond(w, r, http.StatusOK, tinkoff.CandleConverter(&candle[0], stock.ID))
+		s.respond(w, r, http.StatusOK, tinkoff.CandleConverter(&candle[len(candle)-1], stock.ID))
 	}
 }
 

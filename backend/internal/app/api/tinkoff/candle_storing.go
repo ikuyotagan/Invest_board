@@ -64,7 +64,7 @@ func CandleStoring(store store.Store) {
 				log.Println(errors.Errorf("Oh shit, ", err))
 			}
 			for _, stock := range stocks {
-				candles, err := client.Candles(ctx, time.Unix(time.Now().Unix()-int64(time.Hour.Seconds()), 0), time.Now(), sdk.CandleInterval1Day, stock.FIGI)
+				candles, err := client.Candles(ctx, time.Unix(time.Now().Unix()-int64(time.Hour.Seconds())*25, 0), time.Now(), sdk.CandleInterval1Day, stock.FIGI)
 				if err != nil {
 					log.Println(errors.Errorf("Oh shit, ", err))
 				}
