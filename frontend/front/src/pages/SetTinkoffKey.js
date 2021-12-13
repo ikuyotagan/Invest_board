@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
+import { Redirect } from "react-router-dom";
 
 const SetTinkoffKey = (props) => {
   const [tinkoffKey, setTinkoffKey] = useState();
   const [isKey, setIsKey] = useState(props.tKey);
+  const [redirect, setRedirect] = useState(false);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -19,8 +21,13 @@ const SetTinkoffKey = (props) => {
 
     if (response.ok) {
       setIsKey(true);
+      props.setTKey(true);
     }
   };
+
+  if (redirect) {
+    return <Redirect to="/perosnal-graph" />;
+  }
 
   const change = async (e) => {
     e.preventDefault();

@@ -67,7 +67,7 @@ function App() {
           <Route
             path="/set-key"
             exact
-            component={() => <SetTinkoffKey tKey={tKey} api={api} />}
+            component={() => <SetTinkoffKey setTKey={setTKey} tKey={tKey} api={api} />}
           />
         </main>
         <main className="Content">
