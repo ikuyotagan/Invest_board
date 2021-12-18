@@ -1,25 +1,86 @@
-basePath: /Invest_board
 host: localhost:8080
 info:
   contact:
     email: support@swagger.io
   description: This is a sample server celler server.
   title: Invest board
-  version: 0.0.1
+  version: 0.1.0
+tags:
+  - name: "auth"
+    description: "Everything about user authentication"
+  - name: "store"
+    description: "Access to stocks & candles"
+  - name: "tinkoff"
+    description: "Access to your info"
 definitions:
   User:
     properties:
-      Email:
+      email:
         type: string
-      Password:
+      password:
         type: string
     # Both properties are required
     required:
-      - Email
-      - Password
+      - email
+      - password
+  Stock:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      figi:
+        type: string
+    # Both properties are required
+    required:
+      - id
+      - name
+      - figi
+  Tkey:
+    properties:
+      tinkoffapikey:
+        type: string
+    # Both properties are required
+    required:
+      - tinkoffapikey
+  CandleRequest:
+    properties:
+      time_start:
+        type: integer
+      time_end:
+        type: integer
+      figi:
+        type: string
+    # Both properties are required
+    required:
+      - time_start
+      - time_end
+      - figi
+  CandleResponse:
+    properties:
+      time:
+        type: integer
+      open_price:
+        type: integer
+      close_price:
+        type: integer
+      highest_price:
+        type: integer
+      lowest_price:
+        type: integer
+      value:
+        type: integer
+      stock_id:
+        type: string
+  LastCandle:
+    properties:
+      id:
+        type: integer
 paths:
   /users:
     post:
+      tags:
+        - "auth"
       summary: Creates User
       description: Creates User
       consumes:
@@ -37,6 +98,8 @@ paths:
           description: OK
   /sessions:
     post:
+      tags:
+        - "auth"
       summary: Login User
       description: Creates Session
       consumes:
@@ -52,8 +115,10 @@ paths:
       responses:
         200:
           description: OK
-  /logout:
+  /private/logout:
     post:
+      tags:
+        - "auth"
       summary: Logout User
       description: Delete Session
       consumes:
@@ -63,8 +128,10 @@ paths:
       responses:
         200:
           description: OK
-  /whoami:
+  /private/whoami:
     get:
+      tags:
+        - "auth"
       summary: Get User
       description: Get Session
       consumes:
@@ -74,4 +141,95 @@ paths:
       responses:
         200:
           description: OK
+  /private/stocks:
+    get:
+      tags:
+        - "store"
+      summary: Getting Stocks
+      description: Getting Stocks
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Stock"
+  /private/set_tinkoff:
+    post:
+      tags:
+        - "store"
+      summary: Setting tinkoff key
+      description: Setting tinkoff key
+      parameters:
+        - in: body
+          name: Auth
+          required: true
+          schema:
+            $ref: '#/definitions/Tkey'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+  /private/candels:
+    post:
+      tags:
+        - "store"
+      summary: Getting candles
+      description: Getting candles by figi
+      parameters:
+        - in: body
+          name: CandleRequest
+          required: true
+          schema:
+            $ref: '#/definitions/CandleRequest'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/CandleResponse'
+  /private/tinkoff/personal_stocks:
+    get:
+      tags:
+        - "tinkoff"
+      summary: Getting personal stocks
+      description: Getting  personal stocks
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Stock'
+  /private/tinkoff/last_candle:
+    post:
+      tags:
+        - "tinkoff"
+      summary: Getting personal stocks
+      description: Getting  personal stocks
+      parameters:
+        - in: body
+          name: CandleRequest
+          required: true
+          schema:
+            $ref: '#/definitions/LastCandle'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/CandleResponse'
 swagger: "2.0"
